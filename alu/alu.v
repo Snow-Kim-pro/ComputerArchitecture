@@ -9,7 +9,7 @@ module ALU #(parameter data_width = 16) (
 // You can declare any variables as needed.
 
 /* 	YOUR VARIABLE DECLARATION... */
-//숙숙숙
+
 wire [data_width - 1: 0] add;
 wire [data_width - 1: 0] sub;
 wire [data_width - 1: 0] id;
@@ -17,7 +17,7 @@ wire [data_width - 1: 0] not;
 wire [data_width - 1: 0] and;
 wire [data_width - 1: 0] or;
 wire [data_width - 1: 0] nand;
-wire [data_width - 1: 0] nor; //여기있지롱
+wire [data_width - 1: 0] nor; 
 wire [data_width - 1: 0] xor;
 wire [data_width - 1: 0] xnor;
 wire [data_width - 1: 0] lls;
@@ -28,9 +28,6 @@ wire [data_width - 1: 0] tcp;
 wire [data_width - 1: 0] zero;
 wire overflowflag;
 
-
-// 안녕하세요. 이건 김순호가 수정한 코드입니다. 
-// 한글로안녕하세요
 
 assign add 	= A + B;
 assign sub 	= A - B;
@@ -50,9 +47,6 @@ assign tcp 	= ~A + 1;
 assign zero = 0;
 
 
-
-//텅빈거리홀로남아
-
 initial begin
 	C = 0;
 	OverflowFlag = 0;
@@ -63,7 +57,7 @@ end
 /*
 	YOUR ALU FUNCTIONALITY IMPLEMENTATION...
 */
-//하이
+
 always @(*) begin
 	case(FuncCode)
 		FUNC_ADD : C = add;
@@ -86,4 +80,3 @@ end
 
 
 endmodule
-//흐흐 숨겨놨지롱.
