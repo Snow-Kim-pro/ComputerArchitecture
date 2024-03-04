@@ -30,6 +30,7 @@ wire overflowflag;
 
 
 // 안녕하세요. 이건 김순호가 수정한 코드입니다. 
+// 한글로안녕하세요
 
 assign add 	= A + B;
 assign sub 	= A - B;
