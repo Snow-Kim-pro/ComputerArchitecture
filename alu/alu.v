@@ -28,11 +28,8 @@ wire [data_width - 1: 0] tcp;
 wire [data_width - 1: 0] zero;
 wire overflowflag;
 
-//wire hihi;
-//hoho
-//hohoho
-//hi
-//gogo
+
+// 안녕하세요. 이건 김순호가 수정한 코드입니다. 
 
 assign add 	= A + B;
 assign sub 	= A - B;
