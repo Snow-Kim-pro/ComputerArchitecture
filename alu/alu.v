@@ -28,6 +28,8 @@ wire [data_width - 1: 0] tcp;
 wire [data_width - 1: 0] zero;
 wire overflowflag;
 
+// wire hihi;
+
 assign add 	= A + B;
 assign sub 	= A - B;
 assign id  	= A;
