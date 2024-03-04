@@ -51,7 +51,7 @@ assign zero = 0;
 
 
 
-//텅빈거리홀로남아
+// 나 여기 숨어 있어.
 
 initial begin
 	C = 0;
@@ -84,6 +84,8 @@ always @(*) begin
 		FUNC_ZERO :
 end
 
+
+// "Here is my world!!"
 
 endmodule
 //흐흐 숨겨놨지롱.
