@@ -27,6 +27,7 @@ wire [data_width - 1: 0] ars;
 wire [data_width - 1: 0] tcp;
 wire [data_width - 1: 0] zero;
 wire overflowflag;
+wire please_delete_me_overflowff;
 
 
 // 안녕하세요. 이건 김순호가 수정한 코드입니다. 
