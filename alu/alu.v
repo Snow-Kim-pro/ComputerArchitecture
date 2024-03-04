@@ -46,7 +46,6 @@ assign ars 	= A >>> 1;
 assign tcp 	= ~A + 1;
 assign zero = 0;
 
-
 initial begin
 	C = 0;
 	OverflowFlag = 0;
@@ -77,6 +76,5 @@ always @(*) begin
 		FUNC_TCP :
 		FUNC_ZERO :
 end
-
 
 endmodule
