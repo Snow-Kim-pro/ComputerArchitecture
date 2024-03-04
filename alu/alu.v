@@ -50,7 +50,7 @@ assign tcp 	= ~A + 1;
 assign zero = 0;
 
 
-
+// 나 여기 숨어 있어.
 
 
 initial begin
@@ -84,6 +84,8 @@ always @(*) begin
 		FUNC_ZERO :
 end
 
+
+// "Here is my world!!"
 
 endmodule
 
