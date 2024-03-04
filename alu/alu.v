@@ -9,7 +9,7 @@ module ALU #(parameter data_width = 16) (
 // You can declare any variables as needed.
 
 /* 	YOUR VARIABLE DECLARATION... */
-
+//숙숙숙
 wire [data_width - 1: 0] add;
 wire [data_width - 1: 0] sub;
 wire [data_width - 1: 0] id;
@@ -17,7 +17,7 @@ wire [data_width - 1: 0] not;
 wire [data_width - 1: 0] and;
 wire [data_width - 1: 0] or;
 wire [data_width - 1: 0] nand;
-wire [data_width - 1: 0] nor;
+wire [data_width - 1: 0] nor; //여기있지롱
 wire [data_width - 1: 0] xor;
 wire [data_width - 1: 0] xnor;
 wire [data_width - 1: 0] lls;
@@ -51,7 +51,7 @@ assign zero = 0;
 
 
 
-
+//텅빈거리홀로남아
 
 initial begin
 	C = 0;
@@ -63,7 +63,7 @@ end
 /*
 	YOUR ALU FUNCTIONALITY IMPLEMENTATION...
 */
-
+//하이
 always @(*) begin
 	case(FuncCode)
 		FUNC_ADD : C = add;
@@ -86,4 +86,4 @@ end
 
 
 endmodule
-
+//흐흐 숨겨놨지롱.
