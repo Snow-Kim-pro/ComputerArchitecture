@@ -31,6 +31,8 @@ wire overflowflag;
 //wire hihi;
 //hoho
 //hohoho
+//hi
+//gogo
 
 assign add 	= A + B;
 assign sub 	= A - B;
