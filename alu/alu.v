@@ -1,4 +1,4 @@
-/* 2024.03.05 Snow version */
+/* 2024.03.05 Snow Complete version */
 `include "alu_func.v"
 
 module alu #(parameter data_width = 16) (
