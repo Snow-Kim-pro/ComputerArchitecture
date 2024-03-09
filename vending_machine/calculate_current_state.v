@@ -17,7 +17,7 @@ current_total_nxt,wait_time,o_return_coin,o_available_item,o_output_item, i_trig
 	output reg  [`kTotalBits-1:0] current_total_nxt;
 	reg [`kTotalBits-1:0] input_total, output_total, return_total;
 	integer i;	
-	
+	reg [`kTotalBits-1:0] a;
 	// Combinational logic for the next states
 	always @(*) begin
 		// TODO: current_total_nxt
@@ -25,20 +25,21 @@ current_total_nxt,wait_time,o_return_coin,o_available_item,o_output_item, i_trig
 		// Calculate the next current_total state.
 		input_total = (i_input_coin[0] * coin_value[0][30:0]) + (i_input_coin[1] * coin_value[1][30:0]) + (i_input_coin[2] * coin_value[2][30:0]);
 		return_total =  (o_return_coin[0] * coin_value[0][30:0]) + (o_return_coin[1] * coin_value[1][30:0]) + (o_return_coin[2] * coin_value[2][30:0]);
-		if (i_trigger_return == 1 || wait_time == 0) begin
-			current_total_nxt = current_total - return_total;
-		end else begin
-			current_total_nxt = current_total + input_total - output_total;
+		a = current_total + input_total - output_total;
+		if(i_trigger_return == 1 || wait_time == 0) begin
+			current_total_nxt = a - return_total;
+		end
+		else begin
+			current_total_nxt = a;
 		end
 	end
-
 	
 	
 	// Combinational logic for the outputs
 	always @(*) begin
 		// TODO: o_available_item
 		for (i = 0; i < `kNumItems; i = i + 1) begin
-			if(item_price[i] <= current_total) begin
+			if(item_price[i] <= current_total ) begin
 				o_available_item[i] = 1'b1;
 			end else begin
 				o_available_item[i] = 1'b0;
@@ -47,7 +48,7 @@ current_total_nxt,wait_time,o_return_coin,o_available_item,o_output_item, i_trig
 		// TODO: o_output_item
 		if(wait_time > 0) begin
 			for (i = 0; i < `kNumItems; i = i + 1) begin
-				if(i_select_item[i] * item_price[i] <= current_total && i_select_item[i] != 0) begin
+				if((i_select_item[i] * item_price[i] <= current_total) && (i_select_item[i] != 0)) begin
 					o_output_item[i] = 1'b1;
 				end else begin
 					o_output_item[i] = 1'b0;
