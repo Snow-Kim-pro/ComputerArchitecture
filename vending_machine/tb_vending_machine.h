@@ -18,9 +18,11 @@ int current = 0;
 int success = 0;
 int test_num = 0;
 
-const char* to_binary(int input) {
+const char *to_binary(int input)
+{
     string result = "";
-    while (input > 0) {
+    while (input > 0)
+    {
         result = to_string(input % 2) + result;
         input = input / 2;
     }
@@ -28,7 +30,8 @@ const char* to_binary(int input) {
     return ("0b" + result).c_str();
 }
 
-void next_cycle(Vvending_machine* dut, VerilatedVcdC* m_trace) {
+void next_cycle(Vvending_machine *dut, VerilatedVcdC *m_trace)
+{
     dut->clk ^= 1;
     dut->eval();
     m_trace->dump(sim_time++);
@@ -37,24 +40,30 @@ void next_cycle(Vvending_machine* dut, VerilatedVcdC* m_trace) {
     m_trace->dump(sim_time++);
 }
 
-void input_coin(Vvending_machine* dut, VerilatedVcdC* m_trace, int coin) {
+void input_coin(Vvending_machine *dut, VerilatedVcdC *m_trace, int coin)
+{
     dut->i_input_coin = coin;
     next_cycle(dut, m_trace);
     dut->i_input_coin = 0;
     next_cycle(dut, m_trace);
 }
 
-void Available_item(Vvending_machine* dut, VerilatedVcdC* m_trace, int item) {
+void Available_item(Vvending_machine *dut, VerilatedVcdC *m_trace, int item)
+{
     test_num++;
-    if (dut->o_available_item == item) {
+    if (dut->o_available_item == item)
+    {
         success++;
         printf("PASSED : available item: %d, expected %d \n", dut->o_available_item, item);
-    } else {
+    }
+    else
+    {
         printf("FAILED : available item: %d, expected %d \n", dut->o_available_item, item);
     }
 }
 
-void reset_sim(Vvending_machine* dut, VerilatedVcdC* m_trace) {
+void reset_sim(Vvending_machine *dut, VerilatedVcdC *m_trace)
+{
     dut->reset_n = 1;
     dut->i_input_coin = 0;
     dut->i_select_item = 0;
@@ -68,7 +77,8 @@ void reset_sim(Vvending_machine* dut, VerilatedVcdC* m_trace) {
     next_cycle(dut, m_trace);
 }
 
-void select_item(Vvending_machine* dut, VerilatedVcdC* m_trace, int item) {
+void select_item(Vvending_machine *dut, VerilatedVcdC *m_trace, int item)
+{
     dut->i_select_item = item;
     next_cycle(dut, m_trace);
     dut->i_select_item = 0;
@@ -77,48 +87,53 @@ void select_item(Vvending_machine* dut, VerilatedVcdC* m_trace, int item) {
     next_cycle(dut, m_trace);
 }
 
-void Wait_10cycle(Vvending_machine* dut, VerilatedVcdC* m_trace) {
+void Wait_10cycle(Vvending_machine *dut, VerilatedVcdC *m_trace)
+{
     test_num++;
     int wait_time = 0;
     int sum = 0;
-    while (wait_time < 10) {
+    while (wait_time < 10)
+    {
         next_cycle(dut, m_trace);
         wait_time++;
         sum++;
     }
-    if (sum == 10) {
+    if (sum == 10)
+    {
         printf("PASSED : wait 10 cycle \n");
         success++;
-    } else {
+    }
+    else
+    {
         printf("FAILED : wait 10 cycle \n");
     }
 }
-void ReturnTest(int current, Vvending_machine* dut, VerilatedVcdC* m_trace) {
+void ReturnTest(int current, Vvending_machine *dut, VerilatedVcdC *m_trace)
+{
     test_num++;
     int total_current = current;
-    while (current > 0) {
-        if (dut->o_return_coin == 0b101) {
-            current = current - 1100;
-            printf("current %d \n", current);
-        } else if (dut->o_return_coin == 0b011) {
-            current = current - 600;
-            printf("current %d \n", current);
-        } else if (dut->o_return_coin == 0b001) {
+    uint8_t return_coin[3];
+    while (current > 0)
+    {
+        return_coin[0] = dut->o_return_coin & 1;
+        return_coin[1] = (dut->o_return_coin >> 1) & 1;
+        return_coin[2] = (dut->o_return_coin >> 2) & 1;
+        if (return_coin[0])
             current = current - 100;
-            printf("current %d \n", current);
-        } else if (dut->o_return_coin == 0b111) {
-            current = current - 1600;
-            printf("current %d \n", current);
-        } else {
-            printf("current %d \n", current);
-        }
+        if (return_coin[1])
+            current = current - 500;
+        if (return_coin[2])
+            current = current - 1000;
         next_cycle(dut, m_trace);
     }
 
-    if (current == 0) {
+    if (current == 0)
+    {
         printf("PASSED : return %d \n", total_current);
         success++;
-    } else {
+    }
+    else
+    {
         printf("FAILED : return %d \n", total_current);
     }
 }

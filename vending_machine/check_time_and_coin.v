@@ -10,17 +10,23 @@ module check_time_and_coin(i_input_coin,i_select_item,clk,reset_n,wait_time,o_re
 	input [`kNumItems-1:0]	i_select_item;
 	output reg  [`kNumCoins-1:0] o_return_coin;
 	output reg [31:0] wait_time;
+
+	reg [31:0] a;
+	reg[31:0] b;
 	// initiate values
 	initial begin
 		// TODO: initiate values
 		wait_time = 0;
 		o_return_coin = 0;
+		a = 0;
+		b = 1;
 	end
 
 
 	// update coin return time
 	always @(i_input_coin, i_select_item) begin
 		// TODO: update coin return time
+		a <= a + 1;
 	end
 
 	always @(*) begin
@@ -46,12 +52,16 @@ module check_time_and_coin(i_input_coin,i_select_item,clk,reset_n,wait_time,o_re
 		if (!reset_n) begin
 		// TODO: reset all states.
 		
-		wait_time <= 100;
+		wait_time <= 0;
 		end
 		else begin
 		// TODO: update all states.
-		
-		wait_time <= wait_time - 1;
+			if(a == b) begin
+				wait_time <= 100;
+				b <= b + 1;
+			end else begin
+				wait_time <= wait_time - 1;
+			end
 		end
 	end
 endmodule 
