@@ -57,10 +57,12 @@ module check_time_and_coin(i_input_coin,i_select_item,clk,reset_n,wait_time,o_re
 		else begin
 		// TODO: update all states.
 			if(a == b) begin
-				wait_time <= 100;
+				wait_time <= 10;
 				b <= b + 1;
 			end else begin
-				wait_time <= wait_time - 1;
+				if(wait_time > 0) begin
+					wait_time <= wait_time - 1;
+				end
 			end
 		end
 	end

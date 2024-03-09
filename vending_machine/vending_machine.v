@@ -59,7 +59,9 @@ module vending_machine (
 
 	// This module interface, structure, and given a number of modules are not mandatory but recommended.
 	// However, Implementations that use modules are mandatory.
-		
+	
+
+
   	check_time_and_coin check_time_and_coin_module(.i_input_coin(i_input_coin),
 									.current_total(current_total),
   									.i_select_item(i_select_item),
@@ -77,7 +79,8 @@ module vending_machine (
 										.wait_time(wait_time),
 										.o_return_coin(o_return_coin),
 										.o_available_item(o_available_item),
-										.o_output_item(o_output_item));
+										.o_output_item(o_output_item),
+										.i_trigger_return(i_trigger_return));
 	
   	change_state change_state_module(
 						.clk(clk),
