@@ -62,6 +62,7 @@ module vending_machine (
 	// However, Implementations that use modules are mandatory.
 		
   	check_time_and_coin check_time_and_coin_module(.i_input_coin(i_input_coin),
+									.current_total(current_total),
   									.i_select_item(i_select_item),
 									.clk(clk),
 									.reset_n(reset_n),
@@ -88,5 +89,11 @@ module vending_machine (
 						.current_total_nxt(current_total_nxt),
 						.current_total(current_total));
 
+	always @(*) begin
+		
+		if(i_trigger_return) begin
+			
+		end
+	end
 
 endmodule
