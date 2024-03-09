@@ -19,13 +19,13 @@ int main(int argc, char** argv, char** env) {
     Available_item(dut, m_trace, 0b0000);
     ///////////////////////////////////////////////////////////////////////////////////
     printf("\n Insert 100 Coin test\n");
+    input_coin(dut, m_trace, 1); // 100원씩 4번
     input_coin(dut, m_trace, 1);
     input_coin(dut, m_trace, 1);
     input_coin(dut, m_trace, 1);
+    Available_item(dut, m_trace, 0b0001); // 400원
     input_coin(dut, m_trace, 1);
-    Available_item(dut, m_trace, 0b0001);
-    input_coin(dut, m_trace, 1);
-    Available_item(dut, m_trace, 0b0011);
+    Available_item(dut, m_trace, 0b0011); // 500원
     ///////////////////////////////////////////////////////////////////////////////////
     reset_sim(dut, m_trace);
     printf("\n Insert 500 Coin test\n");

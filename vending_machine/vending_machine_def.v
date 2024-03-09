@@ -12,3 +12,9 @@
 `define kNumCoins 3
 
 `define kWaitTime 10
+
+// states 정의
+`define s0 2'b00 // 대기 상태
+`define s1 2'b01 // 동전 입력 상태
+`define s2 2'b10 // 아이템 출력 상태
+`define s3 2'b11 // 동전 반환 상태
