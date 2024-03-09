@@ -1,3 +1,4 @@
+
 `include "vending_machine_def.v"
 
 module check_time_and_coin(clk, reset_n, i_input_coin, i_select_item, item_price, coin_value, o_available_item, current_state,
@@ -49,7 +50,7 @@ module check_time_and_coin(clk, reset_n, i_input_coin, i_select_item, item_price
 				coin = coin_value[2]; // 1000
 			else
 				coin = 0;
-		end	else if(current_state == s2) begin
+		end	else if(current_state == `s2) begin
 			if((select_item & o_available_item) == 4'b0001)
 				coin = item_price[0]; // 400
 			else if((select_item & o_available_item) == 4'b0010)
@@ -83,7 +84,7 @@ module check_time_and_coin(clk, reset_n, i_input_coin, i_select_item, item_price
 
 	// 2. "o_return_coin" 계산 파트
 	always @(*) begin
-		if(current_state == s3) begin 
+		if(current_state == `s3) begin 
 			if(1600 <= coin_total)
 				return_coin = 3'b111;
 			else if(1500 <= coin_total)
@@ -123,7 +124,7 @@ module check_time_and_coin(clk, reset_n, i_input_coin, i_select_item, item_price
 		end else begin
 			if(input_detected)	
 				wait_time <= 10;
-			else if(current_state == s3 && coin_total == 0)
+			else if(current_state == `s3 && coin_total == 0)
 				wait_time <= 10;
 			else
 				if(wait_time > 0) wait_time <= wait_time - 1;	
@@ -137,7 +138,7 @@ module check_time_and_coin(clk, reset_n, i_input_coin, i_select_item, item_price
 		end else begin 
 			if( |i_input_coin )
 				coin_total <= coin_total + coin;
-			else if(current_state == s2 || (|return_coin))
+			else if(current_state == `s2 || (|return_coin))
 				coin_total <= coin_total - coin;
 		end
 	end

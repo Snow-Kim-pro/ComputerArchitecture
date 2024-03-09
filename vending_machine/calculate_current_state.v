@@ -1,3 +1,4 @@
+
 `include "vending_machine_def.v"
 
 module calculate_current_state(clk, reset_n, i_input_coin, i_select_item, select_item, coin_total, wait_time, i_trigger_return,
@@ -31,47 +32,47 @@ module calculate_current_state(clk, reset_n, i_input_coin, i_select_item, select
 	// "상태(state) 정의 in <vending_machine_def>
 	always @(*) begin
 		case(current_state)
-			s0 : begin 
+			`s0 : begin 
 				if ( |i_input_coin ) // 비트 OR 축약
-					next_state = s1; // 동전 입력 시 동전 입력 상태로
+					next_state = `s1; // 동전 입력 시 동전 입력 상태로
 				else if ((trigger_return == 2'b11) && (coin_total != 0))
-					next_state = s3; // 반환 버튼 입력 시 동전 반환 상태로
+					next_state = `s3; // 반환 버튼 입력 시 동전 반환 상태로
 				else
-					next_state = s0; // 그 외에는 대기 상태 유지
+					next_state = `s0; // 그 외에는 대기 상태 유지
 			end
-			s1 : begin 
+			`s1 : begin 
 				if ( |i_input_coin )
-					next_state = s1; // 동전 입력 시 동전 입력 상태(s1) 그대로
+					next_state = `s1; // 동전 입력 시 동전 입력 상태(s1) 그대로
 				else if ( |i_select_item )
-					next_state = s2;
+					next_state = `s2;
 				else if (((trigger_return == 2'b11) && (coin_total != 0)) || wait_time == 0)
-					next_state = s3; // 반환 버튼 입력 시 동전 반환 상태로
+					next_state = `s3; // 반환 버튼 입력 시 동전 반환 상태로
 				else
-					next_state = s1; // 그 외에는 대기 상태 유지
+					next_state = `s1; // 그 외에는 대기 상태 유지
 			end
-			s2 : begin 
+			`s2 : begin 
 				if( |(select_item & available_item) ) begin
-					next_state = s1;
+					next_state = `s1;
 				end else begin
-					next_state = s1;
+					next_state = `s1;
 				end
 			end
-			s3 : begin 
+			`s3 : begin 
 				// Return 처리 이후 coin_total이 0이 되면 대기 상태(s0)로 이동
 				if(coin_total == 0)
-					next_state = s0;
+					next_state = `s0;
 				else
-					next_state = s3;
+					next_state = `s3;
 			end
 			default : begin 
-				next_state = s0; 
+				next_state = `s0; 
 			end
 		endcase
 	end
 
 	// 2. output_item을 위한 Combinational Logic
 	always @(*) begin 
-		if(current_state == s2) begin 
+		if(current_state == `s2) begin 
 			if(|(select_item & available_item))
 				output_item = select_item;
 			else
@@ -100,7 +101,7 @@ module calculate_current_state(clk, reset_n, i_input_coin, i_select_item, select
 	// state, o_output_item, o_available_item : 클록과 리셋에 대한 처리 
 	always @(posedge clk) begin
 		if (!reset_n) begin 
-			current_state <= s0; 
+			current_state <= `s0; 
 			o_output_item <= 0;
 			o_available_item <= 0;
 		end else begin 
