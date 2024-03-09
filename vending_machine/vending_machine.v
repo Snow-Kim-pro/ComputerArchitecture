@@ -47,14 +47,15 @@ module vending_machine (
 	assign coin_value[2] = 1000;
 
 	// Internal states. You may add your own net variables.
-	wire [`kTotalBits-1:0] current_total;
+	reg [`kTotalBits-1:0] current_total, return_total;
 	
 	// Next internal states. You may add your own net variables.
-	wire [`kTotalBits-1:0] current_total_nxt;
+	reg [`kTotalBits-1:0] current_total_nxt;
 
 	
 	// Variables. You may add more your own net variables.
 	wire [31:0] wait_time;
+	reg [2:0] statea = 3'b000;
 
 
 	// This module interface, structure, and given a number of modules are not mandatory but recommended.
@@ -80,7 +81,7 @@ module vending_machine (
 										.o_return_coin(o_return_coin),
 										.o_available_item(o_available_item),
 										.o_output_item(o_output_item),
-										.i_trigger_return(i_trigger_return));
+										.return_total(return_total));
 	
   	change_state change_state_module(
 						.clk(clk),
@@ -88,10 +89,22 @@ module vending_machine (
 						.current_total_nxt(current_total_nxt),
 						.current_total(current_total));
 
-	always @(*) begin
-		
-		if(i_trigger_return) begin
-			
+
+	always @(posedge clk) begin
+		if(i_trigger_return && statea == 3'b000) begin
+			statea <= 3'b001;
+		end else begin
+			case(statea)
+				3'b001: statea <= 3'b010;
+				3'b010: statea <= 3'b011;
+				3'b011: 
+					if(i_trigger_return) begin
+						current_total <= current_total_nxt - return_total;
+					end else begin
+						statea <= 3'b100;
+					end
+				default: statea <= 3'b000;
+			endcase
 		end
 	end
 

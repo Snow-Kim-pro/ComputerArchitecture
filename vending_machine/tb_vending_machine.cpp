@@ -129,7 +129,9 @@ int main(int argc, char **argv, char **env)
     current = 4800;
     next_cycle(dut, m_trace);
     dut->i_trigger_return = 1;
-
+    next_cycle(dut, m_trace);
+    next_cycle(dut, m_trace);
+    next_cycle(dut, m_trace);
     ReturnTest(current, dut, m_trace);
 
     printf("TEST END\n");

@@ -22,6 +22,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vvending_machine___024root final : public Ver
     VL_OUT8(o_available_item,3,0);
     VL_OUT8(o_output_item,3,0);
     VL_OUT8(o_return_coin,2,0);
+    CData/*2:0*/ vending_machine__DOT__statea;
     CData/*2:0*/ vending_machine__DOT__check_time_and_coin_module__DOT__prev_i_input_coin;
     CData/*3:0*/ vending_machine__DOT__check_time_and_coin_module__DOT__prev_i_select_item;
     CData/*0:0*/ __VstlFirstIteration;
@@ -29,11 +30,11 @@ class alignas(VL_CACHE_LINE_BYTES) Vvending_machine___024root final : public Ver
     CData/*0:0*/ __Vtrigprevexpr___TOP__clk__0;
     CData/*0:0*/ __VactContinue;
     IData/*31:0*/ vending_machine__DOT__current_total;
+    IData/*31:0*/ vending_machine__DOT__return_total;
     IData/*31:0*/ vending_machine__DOT__current_total_nxt;
     IData/*31:0*/ vending_machine__DOT__wait_time;
     IData/*31:0*/ vending_machine__DOT__calculate_current_state_module__DOT__input_total;
     IData/*31:0*/ vending_machine__DOT__calculate_current_state_module__DOT__output_total;
-    IData/*31:0*/ vending_machine__DOT__calculate_current_state_module__DOT__return_total;
     IData/*31:0*/ vending_machine__DOT__calculate_current_state_module__DOT__i;
     IData/*31:0*/ vending_machine__DOT__calculate_current_state_module__DOT__a;
     IData/*31:0*/ __VactIterCount;
