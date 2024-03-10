@@ -75,6 +75,7 @@ module vending_machine (
 		.i_input_coin(i_input_coin),
 		.i_select_item(i_select_item),
 		.select_item(select_item),
+		.item_price(item_price),
 		.coin_total(coin_total),
 		.wait_time(wait_time),
 		.i_trigger_return(i_trigger_return),
