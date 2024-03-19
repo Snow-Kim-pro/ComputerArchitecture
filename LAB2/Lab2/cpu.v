@@ -18,15 +18,18 @@ module cpu(input reset,                     // positive reset signal
   wire [6:0]alu_op
   /***** Register declarations *****/
   reg [31:0] next_pc, current_pc;
+
+
   // ---------- Update program counter ----------
   // PC must be updated on the rising edge (positive edge) of the clock.
   pc pc(
-    .reset(reset),       // input (Use reset to initialize PC. Initial value must be 0)
-    .clk(clk),         // input
-    .next_pc(next_pc),     // input
-    .current_pc(current_pc)   // output
+    .reset(reset),          // input (Use reset to initialize PC. Initial value must be 0)
+    .clk(clk),              // input
+    .next_pc(next_pc),      // input
+    .current_pc(current_pc) // output
   );
   
+
   // ---------- Instruction Memory ----------
   instruction_memory imem(
     .reset(),   // input
@@ -34,6 +37,7 @@ module cpu(input reset,                     // positive reset signal
     .addr(),    // input
     .dout()     // output
   );
+
 
   // ---------- Register File ----------
   register_file reg_file (
@@ -65,17 +69,20 @@ module cpu(input reset,                     // positive reset signal
     .is_ecall()       // output (ecall inst)
   );
 
+
   // ---------- Immediate Generator ----------
   immediate_generator imm_gen(
     .part_of_inst(),  // input
     .imm_gen_out()    // output
   );
 
+
   // ---------- ALU Control Unit ----------
   alu_control_unit alu_ctrl_unit (
     .part_of_inst(),  // input
     .alu_op()         // output
   );
+
 
   // ---------- ALU ----------
   alu alu (
@@ -85,6 +92,7 @@ module cpu(input reset,                     // positive reset signal
     .alu_result(alu_result),  // output
     .alu_bcond(alu_bcond)    // output
   );
+
 
   // ---------- Data Memory ----------
   data_memory dmem(
@@ -96,4 +104,6 @@ module cpu(input reset,                     // positive reset signal
     .mem_write (),  // input
     .dout ()        // output
   );
+
+  
 endmodule
