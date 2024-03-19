@@ -12,10 +12,20 @@ module cpu(input reset,                     // positive reset signal
            input clk,                       // clock signal
            output is_halted,                // Whehther to finish simulation
            output [31:0] print_reg [0:31]); // TO PRINT REGISTER VALUES IN TESTBENCH (YOU SHOULD NOT USE THIS)
+  
   /***** Wire declarations *****/
+  wire [31:0] pc_add4, pc_addr, pc_result;
+  wire [31:0] Instr;
+  wire [31:0] Imm;
+  wire [31:0] write_data;
+  wire [31:0] rs2_out, mem_data, read_data;
+
+  wire JALR, JAL, Branch, MemRead, MemtoReg, MemWrite, ALUSrc, RegWrite, PCtoReg, ECALL;
+
   wire [31:0] alu_in_1, alu_in_2, alu_result;
+  wire [3:0]alu_op
   wire alu_bcond;
-  wire [6:0]alu_op
+  
   /***** Register declarations *****/
   reg [31:0] next_pc, current_pc;
 
@@ -29,64 +39,95 @@ module cpu(input reset,                     // positive reset signal
     .current_pc(current_pc) // output
   );
   
+  add_alu add4_PC(
+    .alu_in_1(current_pc)   // input
+    .alu_in_2(4)            // input
+    .alu_result(pc_add4)    // output
+  );
+
+  add_alu addr_PC(
+    .alu_in_1(current_pc)   // input
+    .alu_in_2(Imm)    // input
+    .alu_result(pc_addr)    // output
+  );
+
+  mux21 PCS1(
+    .S()          // input
+    .D0(pc_add4)  // input
+    .D1(pc_addr)  // input
+    .Y(pc_result) // output
+  );
+
+  mux21 PCS2(
+    .S(JALR)        // input
+    .D0(pc_result)  // input
+    .D1(alu_result) // input
+    .Y(next_pc)     // output
+  );
 
   // ---------- Instruction Memory ----------
   instruction_memory imem(
-    .reset(),   // input
-    .clk(),     // input
-    .addr(),    // input
-    .dout()     // output
+    .reset(reset),      // input
+    .clk(clk),          // input
+    .addr(current_pc),  // input
+    .dout(Instr)  // output
   );
 
-  mux21 wirte_data(
-    .S()  // input
-    .D0() // input
-    .D1() // input
-    .Y()  // output
-  )
+
+  mux21 Write_Data(
+    .S(PCtoReg)     // input
+    .D0(read_data)  // input 
+    .D1(pc_add4)    // input
+    .Y(write_data)  // output
+  );
+
 
   // ---------- Register File ----------
   register_file reg_file (
-    .reset (),        // input
-    .clk (),          // input
-    .rs1 (),          // input
-    .rs2 (),          // input
-    .rd (),           // input
-    .rd_din (),       // input
-    .write_enable (), // input
-    .rs1_dout (),     // output
-    .rs2_dout (),     // output
+    .reset (reset),        // input
+    .clk (clk),          // input
+    .rs1 (Instr[19:15]),          // input
+    .rs2 (Instr[24:20]),          // input
+    .rd  (Instr[11: 7]),           // input
+    .rd_din (write_data),       // input
+    .write_enable (RegWrite), // input
+    .rs1_dout (alu_in_1),     // output
+    .rs2_dout (rs2_out),     // output
     .print_reg (print_reg)  //DO NOT TOUCH THIS
   );
 
-
   // ---------- Control Unit ----------
   control_unit ctrl_unit (
-    .part_of_inst(),  // input
-    .is_jal(),        // output
-    .is_jalr(),       // output
-    .branch(),        // output
-    .mem_read(),      // output
-    .mem_to_reg(),    // output
-    .mem_write(),     // output
-    .alu_src(),       // output
-    .write_enable(),  // output
-    .pc_to_reg(),     // output
-    .is_ecall()       // output (ecall inst)
+    .part_of_inst(Instr[6:0]),  // input
+    .is_jal(JALR),          // output
+    .is_jalr(JAL),          // output
+    .branch(Branch),        // output
+    .mem_read(MemRead),     // output
+    .mem_to_reg(MemtoReg),  // output
+    .mem_write(MemWrite),   // output
+    .alu_src(ALUSrc),       // output
+    .write_enable(RegWrite),// output
+    .pc_to_reg(PCtoReg),    // output
+    .is_ecall(ECALL)        // output (ecall inst)
   );
-
 
   // ---------- Immediate Generator ----------
   immediate_generator imm_gen(
-    .part_of_inst(),  // input
-    .imm_gen_out()    // output
+    .part_of_inst(Instr),  // input
+    .imm_gen_out(Imm)    // output
   );
 
+  mux21 ALUS(
+    .S(ALUSrc)        // input
+    .D0(rs2_out)  // input
+    .D1(Imm) // input
+    .Y(alu_in_2)     // output
+  );
 
   // ---------- ALU Control Unit ----------
   alu_control_unit alu_ctrl_unit (
-    .part_of_inst(),  // input
-    .alu_op()         // output
+    .part_of_inst(Instr),  // input
+    .alu_op(alu_op)         // output
   );
 
 
@@ -102,13 +143,20 @@ module cpu(input reset,                     // positive reset signal
 
   // ---------- Data Memory ----------
   data_memory dmem(
-    .reset (),      // input
-    .clk (),        // input
-    .addr (),       // input
-    .din (),        // input
-    .mem_read (),   // input
-    .mem_write (),  // input
-    .dout ()        // output
+    .reset (reset),      // input
+    .clk (clk),        // input
+    .addr (alu_result),       // input
+    .din (rs2_out),        // input
+    .mem_read (MemRead),   // input
+    .mem_write (MemWrite),  // input
+    .dout (read_data)        // output
+  );
+
+  mux21 MemReg(
+    .S(MemtoReg)        // input
+    .D0(alu_result)  // input
+    .D1(mem_data) // input
+    .Y(read_data)     // output
   );
 
 
