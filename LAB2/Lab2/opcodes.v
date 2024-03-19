@@ -4,17 +4,22 @@
 // OPCODE
 // R-type instruction opcodes
 `define ARITHMETIC      7'b0110011
+
 // I-type instruction opcodes
 `define ARITHMETIC_IMM  7'b0010011
 `define LOAD            7'b0000011
 `define JALR            7'b1100111
+
 // S-type instruction opcodes
 `define STORE           7'b0100011
+
 // B-type instruction opcodes
 `define BRANCH          7'b1100011
+
 // U-type instruction opcodes
 //`define LUI             7'b0110111
 //`define AUIPC           7'b0010111
+
 // J-type instruction opcodes
 `define JAL             7'b1101111
 
