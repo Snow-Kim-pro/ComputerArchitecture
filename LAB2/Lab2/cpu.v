@@ -38,6 +38,12 @@ module cpu(input reset,                     // positive reset signal
     .dout()     // output
   );
 
+  mux21 wirte_data(
+    .S()  // input
+    .D0() // input
+    .D1() // input
+    .Y()  // output
+  )
 
   // ---------- Register File ----------
   register_file reg_file (
@@ -105,5 +111,5 @@ module cpu(input reset,                     // positive reset signal
     .dout ()        // output
   );
 
-  
+
 endmodule
