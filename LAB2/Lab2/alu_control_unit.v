@@ -1,9 +1,9 @@
-module alu_control_unit(part_of_inst, alu_op)
-  input [31:0] part_of_inst;
-  output [3:0] alu_op;
+module alu_control_unit(part_of_inst, alu_op);
+  input [10:0] part_of_inst;
+  output reg [3:0] alu_op;
 
-  wire sub_or_not = part_of_inst[30];
-  wire [2:0]funct3 = part_of_inst[14:12];
+  wire sub_or_not = part_of_inst[10];
+  wire [2:0]funct3 = part_of_inst[9:7];
   wire [6:0]opcode = part_of_inst[ 6: 0];
 
   /*
@@ -21,7 +21,7 @@ module alu_control_unit(part_of_inst, alu_op)
   */
 
   always @(*) begin
-    if(opcode == 3'b1100011) begin
+    if(opcode == 7'b1100011) begin
       case(funct3)
         3'b000:
           alu_op = 7; //beq

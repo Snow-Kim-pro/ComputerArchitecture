@@ -20,7 +20,8 @@ module cpu(input reset,                     // positive reset signal
   wire [31:0] write_data;
   wire [31:0] rs2_out, mem_data, read_data;
 
-  wire [31:0] alu_in_1, alu_in_2, alu_result;
+  wire [31:0] alu_in_1, alu_in_2;
+  reg [31:0] alu_result;
   wire [3:0] alu_op;
   wire alu_bcond;
 
@@ -128,7 +129,7 @@ module cpu(input reset,                     // positive reset signal
 
   // ---------- ALU Control Unit ----------
   alu_control_unit alu_ctrl_unit (
-    .part_of_inst(Instr), // input
+    .part_of_inst({Instr[30], Instr[14:12], Instr[6:0]}), // input
     .alu_op(alu_op)       // output
   );
 
