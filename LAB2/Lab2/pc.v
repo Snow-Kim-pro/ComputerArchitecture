@@ -9,7 +9,7 @@ module pc(reset, clk, next_pc, current_pc);
     end
 
     always @(posedge clk) begin
-        if (!reset)
+        if (reset)
             current_pc <= 0;
         else
             current_pc <= next_pc;

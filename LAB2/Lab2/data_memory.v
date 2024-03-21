@@ -19,12 +19,12 @@ module data_memory #(parameter MEM_DEPTH = 16384) (input reset,
 
   // TODO
   // Asynchrnously read data from the memory
-  assign dout = mem_read ? mem[dmem_addr] : 32'd0;
+  assign dout = mem_read ? mem[dmem_addr] : addr;
 
   // Synchronously write data to the memory
   always @(posedge clk) begin
     if(mem_write) 
-      mem[dmem_addr] <= din;   
+      mem[dmem_addr] <= din;
   end
 
   // (use dmem_addr to access memory)

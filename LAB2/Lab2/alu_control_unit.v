@@ -32,7 +32,7 @@ module alu_control_unit(part_of_inst, alu_op);
         default: //3'b101:
           alu_op = 10; //bge
       endcase
-    end else begin
+    end else if(opcode == 7'b0110011) begin
       case(funct3)
         3'b000: begin
           if(sub_or_not) begin
@@ -47,11 +47,21 @@ module alu_control_unit(part_of_inst, alu_op);
           alu_op = 3; //or
         3'b100:
           alu_op = 4; //xor
-        3'b001:
-          alu_op = 5; //sll
+        3'b001: alu_op = 5; //sll
         default: //3'b101:
           alu_op = 6;//srl
       endcase
-    end   
+    end else if(opcode == 7'b0010011) begin
+      case(funct3)
+        3'b000: alu_op = 0; //add
+        3'b111: alu_op = 2; //and
+        3'b110: alu_op = 3; //or
+        3'b100:alu_op = 4; //xor
+        3'b001: alu_op = 5; //sll
+        default: alu_op = 6; //srl
+      endcase
+    end else begin
+      alu_op = 0;
+    end
   end
 endmodule

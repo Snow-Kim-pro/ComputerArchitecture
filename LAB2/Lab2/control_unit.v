@@ -31,7 +31,7 @@ module control_unit (part_of_inst, is_jal, is_jalr, branch, mem_read, mem_to_reg
                 mem_write = 0;
                 alu_src = 0;
                 write_enable = 0;
-                pc_to_reg = 0;
+                pc_to_reg = 1;
                 is_ecall = 0;
             end
             7'b1100111: begin //JARL
@@ -43,7 +43,7 @@ module control_unit (part_of_inst, is_jal, is_jalr, branch, mem_read, mem_to_reg
                 mem_write = 0;
                 alu_src = 0;
                 write_enable = 0;
-                pc_to_reg = 0;
+                pc_to_reg = 1;
                 is_ecall = 0;
             end
             7'b1100011: begin //BRANCH
@@ -91,7 +91,7 @@ module control_unit (part_of_inst, is_jal, is_jalr, branch, mem_read, mem_to_reg
                 mem_write = 0;
                 alu_src = 1;
                 write_enable = 1;
-                pc_to_reg = 1;
+                pc_to_reg = 0;
                 is_ecall = 0; 
             end
             7'b0110011: begin //R-type
@@ -103,7 +103,7 @@ module control_unit (part_of_inst, is_jal, is_jalr, branch, mem_read, mem_to_reg
                 mem_write = 0;
                 alu_src = 0;
                 write_enable = 1;
-                pc_to_reg = 1;
+                pc_to_reg = 0;
                 is_ecall = 0;
             end
             7'b1110011: begin //ECALL

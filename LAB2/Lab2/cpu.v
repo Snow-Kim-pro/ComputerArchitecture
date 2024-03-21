@@ -20,14 +20,14 @@ module cpu(input reset,                     // positive reset signal
   wire [31:0] write_data;
   wire [31:0] rs2_out, mem_data, read_data;
 
-  wire [31:0] alu_in_1, alu_in_2;
-  reg [31:0] alu_result;
+  wire [31:0] alu_in_1, alu_in_2, alu_result;
   wire [3:0] alu_op;
   wire alu_bcond;
 
   wire JALR, JAL, Branch, MemRead, MemtoReg, MemWrite, ALUSrc, RegWrite, PCtoReg;
-  wire PCSrc1;
-  assign PCSrc1 = (Branch & alu_bcond) | JAL;
+  wire PCSrc1, PCSrc1_tmp;
+  assign PCSrc1_tmp = Branch & alu_bcond;
+  assign PCSrc1 = PCSrc1_tmp | JAL;
   
   /***** Register declarations *****/
   reg [31:0] next_pc, current_pc;
@@ -102,8 +102,8 @@ module cpu(input reset,                     // positive reset signal
   // ---------- Control Unit ----------
   control_unit ctrl_unit (
     .part_of_inst(Instr[6:0]),  // input
-    .is_jal(JALR),            // output
-    .is_jalr(JAL),            // output
+    .is_jal(JAL),            // output
+    .is_jalr(JALR),            // output
     .branch(Branch),          // output
     .mem_read(MemRead),       // output
     .mem_to_reg(MemtoReg),    // output
