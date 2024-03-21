@@ -1,5 +1,6 @@
-module control_unit (part_of_inst, is_jal, is_jalr, branch, mem_read, mem_to_reg, mem_write, alu_src, write_enable, pc_to_reg, is_ecall);
+module control_unit (part_of_inst, regist_17, is_jal, is_jalr, branch, mem_read, mem_to_reg, mem_write, alu_src, write_enable, pc_to_reg, is_ecall);
     input [6:0]part_of_inst;
+    input [31:0] regist_17;
     output reg is_jal;
     output reg is_jalr;
     output reg branch;
@@ -116,7 +117,8 @@ module control_unit (part_of_inst, is_jal, is_jalr, branch, mem_read, mem_to_reg
                 alu_src = 0;
                 write_enable = 0;
                 pc_to_reg = 0;
-                is_ecall = 1;
+                if(regist_17 == 10) is_ecall = 1;
+                else is_ecall = 0;
             end
             default: begin
                 is_jal = 0;

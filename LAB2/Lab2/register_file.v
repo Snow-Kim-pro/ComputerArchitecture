@@ -8,6 +8,7 @@ module register_file(input	reset,
 
                      output reg [31:0] rs1_dout,   // output of rs 1
                      output reg [31:0] rs2_dout,   // output of rs 2
+                     output reg [31:0] regist_17,
                      output [31:0] print_reg [0:31]);
   integer i;
   // Register file
@@ -18,6 +19,7 @@ module register_file(input	reset,
   // TODO
   // Asynchronously read register file
   always @(*) begin
+    regist_17 = rf[17];
 
     /* rs1의 값에 따라 rf에서 값을 불러와 rs1_dout에 저장. */
     if(rs1!=0) 
@@ -35,7 +37,7 @@ module register_file(input	reset,
 
   // Synchronously write data to the register file
   always @(posedge clk) begin
-      if (write_enable) rf[rd] <= rd_din;
+      if (write_enable && rd!=0) rf[rd] <= rd_din;
   end
 
   // Initialize register file (do not touch)

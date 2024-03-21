@@ -26,6 +26,7 @@ module cpu(input reset,                     // positive reset signal
 
   wire JALR, JAL, Branch, MemRead, MemtoReg, MemWrite, ALUSrc, RegWrite, PCtoReg;
   wire PCSrc1, PCSrc1_tmp;
+  wire [31:0]regist_17;
   assign PCSrc1_tmp = Branch & alu_bcond;
   assign PCSrc1 = PCSrc1_tmp | JAL;
   
@@ -96,12 +97,14 @@ module cpu(input reset,                     // positive reset signal
     .write_enable (RegWrite), // input
     .rs1_dout (alu_in_1),     // output
     .rs2_dout (rs2_out),      // output
+    .regist_17(regist_17),
     .print_reg (print_reg)    //DO NOT TOUCH THIS
   );
 
   // ---------- Control Unit ----------
   control_unit ctrl_unit (
     .part_of_inst(Instr[6:0]),  // input
+    .regist_17(regist_17), //17번 레지스터의 값을 입력으로 받음. ECALL
     .is_jal(JAL),            // output
     .is_jalr(JALR),            // output
     .branch(Branch),          // output
