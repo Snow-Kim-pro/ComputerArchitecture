@@ -26,7 +26,7 @@ module cpu(input reset,                     // positive reset signal
 
   wire JALR, JAL, Branch, MemRead, MemtoReg, MemWrite, ALUSrc, RegWrite, PCtoReg;
   wire PCSrc1;
-  assign PCSrc1 = (Branch & bcond) | JAL;
+  assign PCSrc1 = (Branch & alu_bcond) | JAL;
   
   /***** Register declarations *****/
   reg [31:0] next_pc, current_pc;
