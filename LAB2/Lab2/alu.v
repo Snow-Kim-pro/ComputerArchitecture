@@ -9,9 +9,9 @@ module alu(alu_in_1, alu_in_2, alu_op, alu_result, alu_bcond);
   always @(*) begin
     case(alu_op)
       0:
-        alu_result = alu_in_1 - alu_in_2;    
+        alu_result = alu_in_1 + alu_in_2;    
       1: 
-        alu_result = alu_in_1 + alu_in_2;
+        alu_result = alu_in_1 - alu_in_2;
       2:
         alu_result = alu_in_1 & alu_in_2;
       3:
