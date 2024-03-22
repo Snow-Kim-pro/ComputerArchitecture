@@ -1,138 +1,72 @@
-module control_unit (part_of_inst, regist_17, is_jal, is_jalr, branch, mem_read, mem_to_reg, mem_write, alu_src, write_enable, pc_to_reg, is_ecall);
-    input [6:0]part_of_inst;
-    input [31:0] regist_17;
-    output reg is_jal;
-    output reg is_jalr;
-    output reg branch;
-    output reg mem_read;
-    output reg mem_to_reg;
-    output reg mem_write;
-    output reg alu_src;
-    output reg write_enable;
-    output reg pc_to_reg;
-    output reg is_ecall;
+`include "opcodes.v"
 
-    // 1. 1101111 JAL
-    // 2. 1100111 JALR
-    // 3. 1100011 BRANCH
-    // 4. 0000011 LW
-    // 5. 0100011 SW
-    // 6. 0010011 I type
-    // 7. 0110011 R type
-    // 8. 1110011 ECALL
+module control_unit (part_of_inst, regist_17, is_jal, is_jalr, branch, mem_read, mem_to_reg, mem_write, alu_src, write_enable, pc_to_reg, is_ecall);
+    input [6:0] part_of_inst;
+    input [31:0] regist_17;
+    output reg is_jal;          // JAL
+    output reg is_jalr;         // JALR
+    output reg branch;          // Branch
+    output reg mem_read;        // MemRead
+    output reg mem_to_reg;      // MemtoReg
+    output reg mem_write;       // MemWrite
+    output reg alu_src;         // ALUSrc
+    output reg write_enable;    // RegWrite
+    output reg pc_to_reg;       // PCtoReg
+    output reg is_ecall;        // ECALL
 
     always @(*) begin
+        is_jal = 0;
+        is_jalr = 0;
+        branch = 0;
+        mem_read = 0;
+        mem_to_reg = 0;
+        mem_write = 0;
+        alu_src = 0;
+        write_enable = 0;
+        pc_to_reg = 0;
+        is_ecall = 0;
+
         case(part_of_inst)
-            7'b1101111: begin //JAL
+            `JAL : begin //JAL
                 is_jal = 1;
-                is_jalr = 0;
-                branch = 0;
-                mem_read = 0;
-                mem_to_reg = 0;
-                mem_write = 0;
-                alu_src = 0;
-                write_enable = 0;
+                write_enable = 1;
                 pc_to_reg = 1;
-                is_ecall = 0;
             end
-            7'b1100111: begin //JARL
-                is_jal = 0;
+            `JALR : begin //JARL
                 is_jalr = 1;
-                branch = 0;
-                mem_read = 0;
-                mem_to_reg = 0;
-                mem_write = 0;
-                alu_src = 0;
-                write_enable = 0;
                 pc_to_reg = 1;
-                is_ecall = 0;
             end
-            7'b1100011: begin //BRANCH
-                is_jal = 0;
-                is_jalr = 0;
+            `BRANCH : begin //BRANCH
                 branch = 1;
-                mem_read = 0;
-                mem_to_reg = 0;
-                mem_write = 0;
-                alu_src = 0;
-                write_enable = 0;
-                pc_to_reg = 0;
-                is_ecall = 0;
             end
-            7'b0000011: begin //LW
-                is_jal = 0;
-                is_jalr = 0;
-                branch = 0;
+            `LOAD : begin //LW
                 mem_read = 1;
                 mem_to_reg = 1;
-                mem_write = 0;
                 alu_src = 1;
                 write_enable = 1;
-                pc_to_reg = 0;
-                is_ecall = 0;
             end
-            7'b0100011: begin //SW
-                is_jal = 0;
-                is_jalr = 0;
-                branch = 0;
-                mem_read = 0;
-                mem_to_reg = 0;
+            `STORE : begin //SW
                 mem_write = 1;
                 alu_src = 1;
-                write_enable = 0;
-                pc_to_reg = 0;
-                is_ecall = 0;
             end
-            7'b0010011: begin //I-type
-                is_jal = 0;
-                is_jalr = 0;
-                branch = 0;
-                mem_read = 0;
-                mem_to_reg = 0;
-                mem_write = 0;
+            `ARITHMETIC_IMM : begin //I-type
                 alu_src = 1;
                 write_enable = 1;
-                pc_to_reg = 0;
-                is_ecall = 0; 
             end
-            7'b0110011: begin //R-type
-                is_jal = 0;
-                is_jalr = 0;
-                branch = 0;
-                mem_read = 0;
-                mem_to_reg = 0;
-                mem_write = 0;
-                alu_src = 0;
+            `ARITHMETIC : begin //R-type
                 write_enable = 1;
-                pc_to_reg = 0;
-                is_ecall = 0;
             end
-            7'b1110011: begin //ECALL
-                is_jal = 0;
-                is_jalr = 0;
-                branch = 0;
-                mem_read = 0;
-                mem_to_reg = 0;
-                mem_write = 0;
-                alu_src = 0;
-                write_enable = 0;
-                pc_to_reg = 0;
-                if(regist_17 == 10) is_ecall = 1;
-                else is_ecall = 0;
+            `ECALL : begin //ECALL
+                if(regist_17 == 10) 
+                    is_ecall = 1;
+                else 
+                    is_ecall = 0;
             end
             default: begin
-                is_jal = 0;
-                is_jalr = 0;
-                branch = 0;
-                mem_read = 0;
-                mem_to_reg = 0;
-                mem_write = 0;
-                alu_src = 0;
-                write_enable = 0;
-                pc_to_reg = 0;
-                is_ecall = 0;
+
             end
         endcase
+
     end
 
 endmodule

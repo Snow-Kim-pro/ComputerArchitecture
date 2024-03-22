@@ -26,7 +26,8 @@ module cpu(input reset,                     // positive reset signal
 
   wire JALR, JAL, Branch, MemRead, MemtoReg, MemWrite, ALUSrc, RegWrite, PCtoReg;
   wire PCSrc1, PCSrc1_tmp;
-  wire [31:0]regist_17;
+  wire [31:0] regist_17;
+
   assign PCSrc1_tmp = Branch & alu_bcond;
   assign PCSrc1 = PCSrc1_tmp | JAL;
   
@@ -103,10 +104,10 @@ module cpu(input reset,                     // positive reset signal
 
   // ---------- Control Unit ----------
   control_unit ctrl_unit (
-    .part_of_inst(Instr[6:0]),  // input
-    .regist_17(regist_17), //17번 레지스터의 값을 입력으로 받음. ECALL
-    .is_jal(JAL),            // output
-    .is_jalr(JALR),            // output
+    .part_of_inst(Instr[6:0]),// input
+    .regist_17(regist_17),    // 17번 레지스터의 값을 입력으로 받음. ECALL
+    .is_jal(JAL),             // output
+    .is_jalr(JALR),           // output
     .branch(Branch),          // output
     .mem_read(MemRead),       // output
     .mem_to_reg(MemtoReg),    // output
@@ -114,7 +115,7 @@ module cpu(input reset,                     // positive reset signal
     .alu_src(ALUSrc),         // output
     .write_enable(RegWrite),  // output
     .pc_to_reg(PCtoReg),      // output
-    .is_ecall(is_halted)          // output (ecall inst)
+    .is_ecall(is_halted)      // output (ecall inst)
   );
 
   // ---------- Immediate Generator ----------
@@ -133,7 +134,7 @@ module cpu(input reset,                     // positive reset signal
   // ---------- ALU Control Unit ----------
   alu_control_unit alu_ctrl_unit (
     .part_of_inst({Instr[30], Instr[14:12], Instr[6:0]}), // input
-    .alu_op(alu_op)       // output
+    .alu_op(alu_op) // output
   );
 
 
