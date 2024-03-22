@@ -26,18 +26,13 @@ module control_unit (part_of_inst, regist_17, is_jal, is_jalr, branch, mem_read,
         pc_to_reg = 0;
         is_ecall = 0;
 
-        case(part_of_inst)
-            `JAL : begin //JAL
-                is_jal = 1;
+        case(part_of_inst)          
+            `ARITHMETIC : begin //R-type
                 write_enable = 1;
-                pc_to_reg = 1;
             end
-            `JALR : begin //JARL
-                is_jalr = 1;
-                pc_to_reg = 1;
-            end
-            `BRANCH : begin //BRANCH
-                branch = 1;
+            `ARITHMETIC_IMM : begin //I-type
+                alu_src = 1;
+                write_enable = 1;
             end
             `LOAD : begin //LW
                 mem_read = 1;
@@ -49,12 +44,19 @@ module control_unit (part_of_inst, regist_17, is_jal, is_jalr, branch, mem_read,
                 mem_write = 1;
                 alu_src = 1;
             end
-            `ARITHMETIC_IMM : begin //I-type
-                alu_src = 1;
-                write_enable = 1;
+            `BRANCH : begin //BRANCH
+                branch = 1;
             end
-            `ARITHMETIC : begin //R-type
+            `JAL : begin //JAL
+                is_jal = 1;
                 write_enable = 1;
+                pc_to_reg = 1;
+            end
+            `JALR : begin //JARL
+                is_jalr = 1;
+                write_enable = 1;
+                alu_src = 1;
+                pc_to_reg = 1;
             end
             `ECALL : begin //ECALL
                 if(regist_17 == 10) 
@@ -62,11 +64,8 @@ module control_unit (part_of_inst, regist_17, is_jal, is_jalr, branch, mem_read,
                 else 
                     is_ecall = 0;
             end
-            default: begin
-
-            end
+            default: 
         endcase
-
     end
 
 endmodule
