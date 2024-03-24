@@ -29,7 +29,7 @@ module alu_control_unit(part_of_inst, alu_op);
           `FUNCT3_XOR : alu_op = 4; // xor
           `FUNCT3_SLL : alu_op = 5; // sll
           `FUNCT3_SRL : alu_op = 6; // srl
-          default : alu_op = 0;  
+          default : alu_op = 11;  
         endcase    
       end
 
@@ -41,7 +41,7 @@ module alu_control_unit(part_of_inst, alu_op);
           `FUNCT3_XOR : alu_op = 4; // xor
           `FUNCT3_SLL : alu_op = 5; // sll
           `FUNCT3_SRL : alu_op = 6; // srl
-          default : alu_op = 0;
+          default : alu_op = 11;
         endcase    
       end
 
@@ -51,10 +51,11 @@ module alu_control_unit(part_of_inst, alu_op);
           `FUNCT3_BNE : alu_op = 8;   // bne
           `FUNCT3_BLT : alu_op = 9;   // blt
           `FUNCT3_BGE : alu_op = 10;  // bge     
-          default : alu_op = 0;
+          default : alu_op = 11;
         endcase    
       end
 
+      // Load, Store (= Add 수행)
       default : alu_op = 0;
 
     endcase
