@@ -15,16 +15,8 @@ module control_unit (part_of_inst, regist_17, is_jal, is_jalr, branch, mem_read,
     output reg is_ecall;        // ECALL
 
     always @(*) begin
-        is_jal = 0;
-        is_jalr = 0;
-        branch = 0;
-        mem_read = 0;
-        mem_to_reg = 0;
-        mem_write = 0;
-        alu_src = 0;
-        write_enable = 0;
-        pc_to_reg = 0;
-        is_ecall = 0;
+        is_jal = 0; is_jalr = 0; branch = 0; mem_read = 0; mem_to_reg = 0; mem_write = 0;
+        alu_src = 0; write_enable = 0; pc_to_reg = 0; is_ecall = 0;
 
         case(part_of_inst)          
             `ARITHMETIC : begin //R-type
@@ -64,7 +56,11 @@ module control_unit (part_of_inst, regist_17, is_jal, is_jalr, branch, mem_read,
                 else 
                     is_ecall = 0;
             end
-            default: 
+            default : begin 
+                is_jal = 0; is_jalr = 0; branch = 0; mem_read = 0; mem_to_reg = 0; mem_write = 0;
+                alu_src = 0; write_enable = 0; pc_to_reg = 0; is_ecall = 0;
+            end
+
         endcase
     end
 
