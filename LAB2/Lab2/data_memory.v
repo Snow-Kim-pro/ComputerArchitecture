@@ -19,7 +19,7 @@ module data_memory #(parameter MEM_DEPTH = 16384) (input reset,
 
   // TODO
   // Asynchrnously read data from the memory
-  assign dout = mem_read ? mem[dmem_addr] : addr;
+  assign dout = mem_read ? mem[dmem_addr] : 32'd0;
 
   // Synchronously write data to the memory
   always @(posedge clk) begin
