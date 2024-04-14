@@ -1,15 +1,15 @@
 
-module MemDataRegister(reset, clk, memdata, MDR);
+module ALUOut(reset, clk, alu_result, ALUOut);
     input reset;
     input clk;
-    input [31:0] memdata;
-    output reg[31:0] MDR;
+    input [31:0] alu_result;
+    output reg [31:0] ALUOut;
 
     always @(posedge clk) begin
         if (reset)
-            MDR <= 0;
+            ALUOut <= 0;
         else
-            MDR <= memdata;
+            ALUOut <= alu_result;
     end
 endmodule
 

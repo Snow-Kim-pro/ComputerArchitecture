@@ -1,20 +1,20 @@
 
-module PC(reset, clk, pcWrite, next_pc, current_pc);
+module PC(reset, clk, clkPC, next_pc, curr_pc);
     input reset;
     input clk;
-    input pcWrite;
+    input clkPC;
     input [31:0] next_pc;
-    output reg[31:0] current_pc;
+    output reg[31:0] curr_pc;
 
     initial begin
-        current_pc = 0;
+        curr_pc = 0;
     end
 
     always @(posedge clk) begin
         if (reset)
-            current_pc <= 0;
-        else if (pcWrite)
-            current_pc <= next_pc;
+            curr_pc <= 0;
+        else if (clkPC)
+            curr_pc <= next_pc;
     end
 endmodule
 
