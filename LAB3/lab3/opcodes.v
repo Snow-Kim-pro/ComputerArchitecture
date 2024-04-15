@@ -54,4 +54,6 @@
 `define Bxx_EX_taken     4'b1011
 `define JAL_WB           4'b1100
 `define JALR_WB          4'b1101
-`define ISECALL          4'b1110
+`define AGAIN            4'b1110
+`define ISECALL          4'b1111
+

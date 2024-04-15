@@ -63,7 +63,7 @@ module ControlUnit (reset, clk, bcond, opcode, regist_17, pcwritecond, pcwrite, 
                         `JALR : state <= `JALR_WB;
                         `ECALL : begin
                            if(regist_17 == 10) state <= `ISECALL;
-                           else state <= `IF;
+                           else state <= `AGAIN;
                         end
                         default : state <= `ID;
                     endcase
@@ -89,6 +89,7 @@ module ControlUnit (reset, clk, bcond, opcode, regist_17, pcwritecond, pcwrite, 
                 `JAL_WB : state <= `IF;              
                 `JALR_WB : state <= `IF;
                 `ISECALL : state <= `ISECALL;
+                `AGAIN : state <= `IF;
                 default: state <= 0;              
             endcase
         end  
@@ -120,7 +121,7 @@ module ControlUnit (reset, clk, bcond, opcode, regist_17, pcwritecond, pcwrite, 
                 controlWord = REGWRITE | MEMTOREG | ALUSRCB1 | ALUOP0 | PCWRITE;   
             
             `Bxx_EX_not_taken : // if not taken : {PC <- ALUOut}
-                controlWord = PCWRITECOND | ALUOP3 | PCSOURCE;               
+                controlWord = ALUSRCA | ALUOP3 | PCWRITECOND | PCSOURCE;               
             `Bxx_EX_taken : // if taken : {PC <- PC + imm(IR)} (ALUSRCA = 0, PCSOURCE = 0)       
                 controlWord = ALUSRCB2 | ALUOP0 | PCWRITE;         
             
@@ -129,7 +130,9 @@ module ControlUnit (reset, clk, bcond, opcode, regist_17, pcwritecond, pcwrite, 
                 controlWord = REGWRITE | ALUSRCB2 | ALUOP0 | PCWRITE;            
             `JALR_WB : // RF[rd(IR)] <- ALUOut, PC <- A + Imm(IR) (MEMTOREG = 0, ALUSRCA = 0, PCSOURCE = 0, )
                 controlWord = REGWRITE | ALUSRCA | ALUSRCB2 | ALUOP0 | PCWRITE;   
-
+            
+            `AGAIN : // PC <- PC+4
+                controlWord = ALUSRCB1 | ALUOP0 | PCWRITE;   
             `ISECALL : //ECALL
                 controlWord = IS_ECALL;
 
