@@ -7,6 +7,7 @@ module RegisterFile(input	reset,
                     input write_enable,       // RegWrite signal
                     output [31:0] rs1_dout,   // output of rs 1
                     output [31:0] rs2_dout,
+                    output reg [31:0] regist_17,
                     output [31:0] print_reg[0:31]);  // output of rs 2
   integer i;
   // Register file
@@ -15,6 +16,7 @@ module RegisterFile(input	reset,
   // Asynchronously read register file
   assign rs1_dout = rf[rs1];
   assign rs2_dout = rf[rs2];
+  assign regist_17 = rf[17];
 
   always @(posedge clk) begin
     // Initialize register file (do not touch)

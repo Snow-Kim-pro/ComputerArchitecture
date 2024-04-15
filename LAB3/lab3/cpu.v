@@ -18,7 +18,7 @@ module cpu(input reset,       // positive reset signal
   wire [31:0] next_pc, curr_pc;
   wire [31:0] address, mem_data;
 
-  wire [31:0] instr, write_data, rs1_dout, rs2_dout;
+  wire [31:0] instr, write_data, rs1_dout, rs2_dout, regist_17;
 
   wire [31:0] Imm, alu_src1, alu_src2, alu_result;
   wire [2:0] alu_control
@@ -99,6 +99,7 @@ module cpu(input reset,       // positive reset signal
     .write_enable(RegWrite), // input
     .rs1_dout(rs1_dout),     // output
     .rs2_dout(rs2_dout),     // output
+    .regist_17(regist_17),
     .print_reg(print_reg)    // output (TO PRINT REGISTER VALUES IN TESTBENCH)
   );
 
@@ -137,7 +138,9 @@ module cpu(input reset,       // positive reset signal
   ControlUnit ctrl_unit(
     .reset(reset),             // input
     .clk(clk),                 // input
+    .bcond(bcond),
     .opcode(instr[6:0]),       // input
+    .regist_17(regist_17),
     .pcwritecond(PCwriteCond), // output
     .pcwrite(PCWrite),         // output
     .iord(IorD),               // output
