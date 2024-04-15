@@ -109,7 +109,7 @@ module cpu(input reset,       // positive reset signal
     .rs2_dout(rs2_dout), // input
     .A(A),               // output
     .B(B)                // output
-  )
+  );
 
   // ---------- Immediate Generator ----------
   ImmediateGenerator imm_gen(
@@ -137,7 +137,7 @@ module cpu(input reset,       // positive reset signal
   ControlUnit ctrl_unit(
     .reset(reset),             // input
     .clk(clk),                 // input
-    .part_of_inst(instr[6:0]), // input
+    .opcode(instr[6:0]),       // input
     .pcwritecond(PCwriteCond), // output
     .pcwrite(PCWrite),         // output
     .iord(IorD),               // output
