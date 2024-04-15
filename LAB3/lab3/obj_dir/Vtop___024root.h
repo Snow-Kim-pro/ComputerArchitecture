@@ -130,7 +130,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vtop___024root final : public VerilatedModule
         IData/*31:0*/ top__DOT__cpu__DOT__memory__DOT__i;
         IData/*31:0*/ top__DOT__cpu__DOT__memory__DOT__mem_addr;
         IData/*31:0*/ top__DOT__cpu__DOT__inst_register__DOT__memdata;
-        IData/*31:0*/ top__DOT__cpu__DOT__inst_register__DOT__inst;
+        IData/*31:0*/ top__DOT__cpu__DOT__inst_register__DOT__instr;
         IData/*31:0*/ top__DOT__cpu__DOT__inst_register__DOT__IR;
         IData/*31:0*/ top__DOT__cpu__DOT__mem_data_register__DOT__memdata;
         IData/*31:0*/ top__DOT__cpu__DOT__mem_data_register__DOT__MDR;

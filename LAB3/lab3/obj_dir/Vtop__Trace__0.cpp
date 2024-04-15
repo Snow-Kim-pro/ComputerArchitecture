@@ -225,7 +225,7 @@ void Vtop___024root__trace_chg_0_sub_0(Vtop___024root* vlSelf, VerilatedVcd::Buf
     bufp->chgBit(oldp+199,(vlSelf->top__DOT__cpu__DOT__inst_register__DOT__clk));
     bufp->chgBit(oldp+200,(vlSelf->top__DOT__cpu__DOT__inst_register__DOT__irwrite));
     bufp->chgIData(oldp+201,(vlSelf->top__DOT__cpu__DOT__inst_register__DOT__memdata),32);
-    bufp->chgIData(oldp+202,(vlSelf->top__DOT__cpu__DOT__inst_register__DOT__inst),32);
+    bufp->chgIData(oldp+202,(vlSelf->top__DOT__cpu__DOT__inst_register__DOT__instr),32);
     bufp->chgIData(oldp+203,(vlSelf->top__DOT__cpu__DOT__inst_register__DOT__IR),32);
     bufp->chgBit(oldp+204,(vlSelf->top__DOT__cpu__DOT__mem_data_register__DOT__reset));
     bufp->chgBit(oldp+205,(vlSelf->top__DOT__cpu__DOT__mem_data_register__DOT__clk));

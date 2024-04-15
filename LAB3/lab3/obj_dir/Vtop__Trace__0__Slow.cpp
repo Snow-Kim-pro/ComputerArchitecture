@@ -160,7 +160,7 @@ VL_ATTR_COLD void Vtop___024root__trace_init_sub__TOP__0(Vtop___024root* vlSelf,
     tracep->declBit(c+200,0,"clk",-1, VerilatedTraceSigDirection::INPUT, VerilatedTraceSigKind::WIRE, VerilatedTraceSigType::LOGIC, false,-1);
     tracep->declBit(c+201,0,"irwrite",-1, VerilatedTraceSigDirection::INPUT, VerilatedTraceSigKind::WIRE, VerilatedTraceSigType::LOGIC, false,-1);
     tracep->declBus(c+202,0,"memdata",-1, VerilatedTraceSigDirection::INPUT, VerilatedTraceSigKind::WIRE, VerilatedTraceSigType::LOGIC, false,-1, 31,0);
-    tracep->declBus(c+203,0,"inst",-1, VerilatedTraceSigDirection::OUTPUT, VerilatedTraceSigKind::WIRE, VerilatedTraceSigType::LOGIC, false,-1, 31,0);
+    tracep->declBus(c+203,0,"instr",-1, VerilatedTraceSigDirection::OUTPUT, VerilatedTraceSigKind::WIRE, VerilatedTraceSigType::LOGIC, false,-1, 31,0);
     tracep->declBus(c+204,0,"IR",-1, VerilatedTraceSigDirection::OUTPUT, VerilatedTraceSigKind::WIRE, VerilatedTraceSigType::LOGIC, false,-1, 31,0);
     tracep->popPrefix();
     tracep->pushPrefix("mem_data_register", VerilatedTracePrefixType::SCOPE_MODULE);
@@ -489,7 +489,7 @@ VL_ATTR_COLD void Vtop___024root__trace_full_0_sub_0(Vtop___024root* vlSelf, Ver
     bufp->fullBit(oldp+200,(vlSelf->top__DOT__cpu__DOT__inst_register__DOT__clk));
     bufp->fullBit(oldp+201,(vlSelf->top__DOT__cpu__DOT__inst_register__DOT__irwrite));
     bufp->fullIData(oldp+202,(vlSelf->top__DOT__cpu__DOT__inst_register__DOT__memdata),32);
-    bufp->fullIData(oldp+203,(vlSelf->top__DOT__cpu__DOT__inst_register__DOT__inst),32);
+    bufp->fullIData(oldp+203,(vlSelf->top__DOT__cpu__DOT__inst_register__DOT__instr),32);
     bufp->fullIData(oldp+204,(vlSelf->top__DOT__cpu__DOT__inst_register__DOT__IR),32);
     bufp->fullBit(oldp+205,(vlSelf->top__DOT__cpu__DOT__mem_data_register__DOT__reset));
     bufp->fullBit(oldp+206,(vlSelf->top__DOT__cpu__DOT__mem_data_register__DOT__clk));

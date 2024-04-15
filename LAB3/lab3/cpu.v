@@ -38,7 +38,7 @@ module cpu(input reset,       // positive reset signal
   // ---------- Update program counter ----------
     
   // PC must be updated on the rising edge (positive edge) of the clock.
-  assign clkPC = (bcond & PCwriteCond) | PCWrite;
+  assign clkPC = (!bcond & PCwriteCond) | PCWrite;
   PC pc(
     .reset(reset),     // input (Use reset to initialize PC. Initial value must be 0)
     .clk(clk),         // input
@@ -70,7 +70,7 @@ module cpu(input reset,       // positive reset signal
     .clk(clk),          // input
     .irwrite(IRWrite),  // input
     .memdata(mem_data), // input
-    .inst(instr),       // output
+    .instr(instr),       // output
     .IR(IR)             // output
   );
 
@@ -128,7 +128,7 @@ module cpu(input reset,       // positive reset signal
   mux41 ALUSRC2(
     .S (ALUSrcB), // input
     .D0(B),       // input 
-    .D1(32'b100),   // input
+    .D1(32'd4),   // input
     .D2(Imm),     // input 
     .D3(32'b0),   // input
     .Y (alu_src2) // output
@@ -160,7 +160,7 @@ module cpu(input reset,       // positive reset signal
   ALUControlUnit alu_ctrl_unit(
     .part_of_inst({instr[30], instr[14:12]}), // input : 4bit
     .alu_control_op(ALUOp),   // input : 2bit
-    .alu_op(alu_control) // output : 4bit
+    .alu_op(alu_control) // output : 3bit
   );
 
   // ---------- ALU ----------
@@ -168,7 +168,7 @@ module cpu(input reset,       // positive reset signal
     .in_1(alu_src1),       // input  
     .in_2(alu_src2),       // input
     .control(alu_control), // input
-    .bcond(bcond),          // output
+    .bcond(bcond),         // output
     .result(alu_result)   // output
   );
 
