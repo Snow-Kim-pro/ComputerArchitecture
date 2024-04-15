@@ -63,6 +63,7 @@ module ControlUnit (reset, clk, bcond, opcode, regist_17, pcwritecond, pcwrite, 
                         `JALR : state <= `JALR_WB;
                         `ECALL : begin
                            if(regist_17 == 10) state <= `ISECALL;
+                           else state <= `IF;
                         end
                         default : state <= `ID;
                     endcase
@@ -107,27 +108,27 @@ module ControlUnit (reset, clk, bcond, opcode, regist_17, pcwritecond, pcwrite, 
             `Itype_EX : // ALUOut <- A + imm(IR)
                 controlWord = ALUSRCA | ALUSRCB2 | ALUOP1;      
             `IRtype_WB : // RF[rd(IR)] <- ALUOut, PC <- PC+4 (MEMTOREG = 0, ALUSRCA = 0, PCSOURCE = 0)
-                controlWord = REGWRITE | MEMTOREG | ALUSRCB1 | PCWRITE | ALUOP0;
+                controlWord = REGWRITE | ALUSRCB1 | ALUOP0 | PCWRITE;
 
             `LDSD_EX : // ALUOut <- A + imm(IR) 
                 controlWord = ALUSRCA | ALUSRCB2 | ALUOP0;              
             `SD_MEM : // MEM[ALUOut] <- B, PC <- PC+4 (ALUSRCA = 0, PCSOURCE = 0)        
-                controlWord = IORD | MEMWRITE | ALUSRCB1 | PCWRITE | ALUOP0;      
+                controlWord = IORD | MEMWRITE | ALUSRCB1 | ALUOP0 | PCWRITE;      
             `LD_MEM : // MDR <- MEM[ALUOut]
                 controlWord = IORD | MEMREAD;            
             `LD_WB : // RF[rd(IR)] <- MDR, PC <- PC+4 (ALUSRCA = 0, PCSOURCE = 0)        
-                controlWord = REGWRITE | MEMTOREG | ALUSRCB1 | PCWRITE | ALUOP0;   
+                controlWord = REGWRITE | MEMTOREG | ALUSRCB1 | ALUOP0 | PCWRITE;   
             
             `Bxx_EX_not_taken : // if not taken : {PC <- ALUOut}
                 controlWord = PCWRITECOND | ALUOP3 | PCSOURCE;               
             `Bxx_EX_taken : // if taken : {PC <- PC + imm(IR)} (ALUSRCA = 0, PCSOURCE = 0)       
-                controlWord = ALUSRCB2 | PCWRITE | ALUOP0;         
+                controlWord = ALUSRCB2 | ALUOP0 | PCWRITE;         
             
             `JAL_WB : // RF[rd(IR)] <- ALUOut, PC <- PC + Imm(IR) (MEMTOREG = 0, ALUSRCA = 0, PCSOURCE = 0, )
                 // controlWord = (1 << REGWRITE) | (0 << MEMTOREG) | (0 << ALUSRCA) | (2'b10 << ALUSRCB) | (0 << PCSOURCE) | (1 << PCWRITE) | (2'b11 << ALUOP);            
-                controlWord = REGWRITE | ALUSRCB2 | PCWRITE | ALUOP0;            
+                controlWord = REGWRITE | ALUSRCB2 | ALUOP0 | PCWRITE;            
             `JALR_WB : // RF[rd(IR)] <- ALUOut, PC <- A + Imm(IR) (MEMTOREG = 0, ALUSRCA = 0, PCSOURCE = 0, )
-                controlWord = REGWRITE | ALUSRCA | ALUSRCB2 | PCWRITE | ALUOP0;   
+                controlWord = REGWRITE | ALUSRCA | ALUSRCB2 | ALUOP0 | PCWRITE;   
 
             `ISECALL : //ECALL
                 controlWord = IS_ECALL;

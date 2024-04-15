@@ -85,7 +85,7 @@ VL_ATTR_COLD void Vtop___024root___dump_triggers__stl(Vtop___024root* vlSelf) {
 }
 #endif  // VL_DEBUG
 
-extern const VlUnpacked<SData/*14:0*/, 16> Vtop__ConstPool__TABLE_h18cd29ea_0;
+extern const VlUnpacked<SData/*14:0*/, 16> Vtop__ConstPool__TABLE_h93a31cc5_0;
 extern const VlUnpacked<CData/*3:0*/, 512> Vtop__ConstPool__TABLE_h4098eea6_0;
 
 VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
@@ -145,7 +145,7 @@ VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
         = (7U & (vlSelf->top__DOT__cpu__DOT__IR >> 0xcU));
     __Vtableidx1 = vlSelf->top__DOT__cpu__DOT__ctrl_unit__DOT__state;
     vlSelf->top__DOT__cpu__DOT__ctrl_unit__DOT__controlWord 
-        = Vtop__ConstPool__TABLE_h18cd29ea_0[__Vtableidx1];
+        = Vtop__ConstPool__TABLE_h93a31cc5_0[__Vtableidx1];
     vlSelf->print_reg[0U] = vlSelf->top__DOT__cpu__DOT__reg_file__DOT__rf
         [0U];
     vlSelf->print_reg[1U] = vlSelf->top__DOT__cpu__DOT__reg_file__DOT__rf
