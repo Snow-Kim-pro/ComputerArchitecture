@@ -146,3 +146,4 @@ module ControlUnit (reset, clk, bcond, opcode, regist_17, pcwritecond, pcwrite, 
     end
 
 endmodule
+
