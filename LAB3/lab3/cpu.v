@@ -25,7 +25,7 @@ module cpu(input reset,       // positive reset signal
 
   wire PCwriteCond, PCWrite, IorD, MemRead, MemWrite, MemtoReg, IRWrite;
   wire PCSource, ALUSrcA, RegWrite, bcond;
-  wire [1:0] ALUSrcB;
+  wire [1:0] ALUSrcB, ALUOp;
 
   /***** Register declarations *****/
   reg [31:0] IR; // instruction register
@@ -99,7 +99,7 @@ module cpu(input reset,       // positive reset signal
     .write_enable(RegWrite), // input
     .rs1_dout(rs1_dout),     // output
     .rs2_dout(rs2_dout),     // output
-    .regist_17(regist_17),
+    .regist_17(regist_17),   // output
     .print_reg(print_reg)    // output (TO PRINT REGISTER VALUES IN TESTBENCH)
   );
 
@@ -138,9 +138,9 @@ module cpu(input reset,       // positive reset signal
   ControlUnit ctrl_unit(
     .reset(reset),             // input
     .clk(clk),                 // input
-    .bcond(bcond),
+    .bcond(bcond),             // input
     .opcode(instr[6:0]),       // input
-    .regist_17(regist_17),
+    .regist_17(regist_17),     // input
     .pcwritecond(PCwriteCond), // output
     .pcwrite(PCWrite),         // output
     .iord(IorD),               // output
@@ -149,6 +149,7 @@ module cpu(input reset,       // positive reset signal
     .memtoreg(MemtoReg),       // output
     .irwrite(IRWrite),         // output
     .pcsource(PCSource),       // output
+    .aluop(ALUOp),             // output : 2bit
     .alusrcB(ALUSrcB),         // output : 2bit
     .alusrcA(ALUSrcA),         // output
     .regwrite(RegWrite),       // output
@@ -157,7 +158,8 @@ module cpu(input reset,       // positive reset signal
 
   // ---------- ALU Control Unit ----------
   ALUControlUnit alu_ctrl_unit(
-    .part_of_inst({instr[30], instr[14:12], instr[6:0]}), // input : 10bit
+    .part_of_inst({instr[30], instr[14:12]}), // input : 4bit
+    .alu_control_op(ALUOp),   // input : 2bit
     .alu_control(alu_control) // output : 3bit
   );
 

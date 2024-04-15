@@ -2,7 +2,7 @@
 
 module ALUControlUnit(part_of_inst, alu_control_op, alu_op);
   input [3:0] part_of_inst;
-  input [1:0]alu_cont_op;
+  input [1:0] alu_cont_op;
   output reg [3:0] alu_op;
 
   /*
