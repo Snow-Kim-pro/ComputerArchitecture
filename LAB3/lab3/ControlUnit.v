@@ -125,8 +125,7 @@ module ControlUnit (reset, clk, bcond, opcode, regist_17, pcwritecond, pcwrite, 
             `Bxx_EX_taken : // if taken : {PC <- PC + imm(IR)} (ALUSRCA = 0, PCSOURCE = 0)       
                 controlWord = ALUSRCB2 | ALUOP0 | PCWRITE;         
             
-            `JAL_WB : // RF[rd(IR)] <- ALUOut, PC <- PC + Imm(IR) (MEMTOREG = 0, ALUSRCA = 0, PCSOURCE = 0, )
-                // controlWord = (1 << REGWRITE) | (0 << MEMTOREG) | (0 << ALUSRCA) | (2'b10 << ALUSRCB) | (0 << PCSOURCE) | (1 << PCWRITE) | (2'b11 << ALUOP);            
+            `JAL_WB : // RF[rd(IR)] <- ALUOut, PC <- PC + Imm(IR) (MEMTOREG = 0, ALUSRCA = 0, PCSOURCE = 0)           
                 controlWord = REGWRITE | ALUSRCB2 | ALUOP0 | PCWRITE;            
             `JALR_WB : // RF[rd(IR)] <- ALUOut, PC <- A + Imm(IR) (MEMTOREG = 0, ALUSRCA = 0, PCSOURCE = 0, )
                 controlWord = REGWRITE | ALUSRCA | ALUSRCB2 | ALUOP0 | PCWRITE;   
@@ -147,3 +146,4 @@ module ControlUnit (reset, clk, bcond, opcode, regist_17, pcwritecond, pcwrite, 
     end
 
 endmodule
+
