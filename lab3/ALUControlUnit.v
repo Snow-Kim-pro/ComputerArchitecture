@@ -2,7 +2,7 @@
 
 module ALUControlUnit(part_of_inst, alu_control_op, alu_op);
   input [3:0] part_of_inst;
-  input [1:0] alu_cont_op;
+  input [1:0] alu_control_op;
   output reg [3:0] alu_op;
 
   /*
@@ -15,7 +15,7 @@ module ALUControlUnit(part_of_inst, alu_control_op, alu_op);
   wire [2:0]funct3 = part_of_inst[2:0];
 
   always @(*) begin
-    case(alu_cont_op) 
+    case(alu_control_op) 
       2'b00 : // LW, SW
         alu_op = 0; //ADD      
       2'b01 : begin // bxx
@@ -37,7 +37,7 @@ module ALUControlUnit(part_of_inst, alu_control_op, alu_op);
           `FUNCT3_XOR : alu_op = 4;   // XOR
           `FUNCT3_SRL : alu_op = 6;  // SRL
           `FUNCT3_OR  : alu_op = 3;  // OR
-          `FUNCT3_AND1 : alu_op = 2;  // AND 
+          `FUNCT3_AND : alu_op = 2;  // AND 
           default : alu_op = 11; //ELSE
         endcase    
       end      
