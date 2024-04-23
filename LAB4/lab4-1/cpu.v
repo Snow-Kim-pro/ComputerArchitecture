@@ -16,8 +16,10 @@ module cpu(input reset,       // positive reset signal
   wire [31:0] curr_pc, pc_add4, inst;
   wire [31:0] rs1_dout, rs2_dout;
   
-  wire mem_read, mem_to_reg, mem_write, alu_src, write_enable, pc_to_reg, alu_op, bcond;
+  wire mem_read, mem_to_reg, mem_write, alu_src, write_enable, pc_to_reg, alu_op, is_ecall, bcond;
+  wire pcwrite, if_id_write, control_mux;
   wire [31:0] imm_gen_out;
+  wire [8:0] control_output;
   wire [3:0] alu_control;
   wire foward_A, foward_B;
 
@@ -45,6 +47,7 @@ module cpu(input reset,       // positive reset signal
   reg ID_EX_mem_read;       // will be used in MEM stage
   reg ID_EX_mem_to_reg;     // will be used in WB stage
   reg ID_EX_reg_write;      // will be used in WB stage
+  reg ID_EX_is_ecall;
   // From others
   reg [31:0] ID_EX_rs1_data;
   reg [31:0] ID_EX_rs2_data;
@@ -79,6 +82,7 @@ module cpu(input reset,       // positive reset signal
   PC pc(
     .reset(reset),       // input (Use reset to initialize PC. Initial value must be 0)
     .clk(clk),           // input
+    .pcwrite(pcwrite),   // input
     .next_pc(next_pc),   // input
     .curr_pc(curr_pc)    // output
   );
@@ -102,18 +106,19 @@ module cpu(input reset,       // positive reset signal
     if (reset)
       IF_ID_inst <= 0;   
     else 
-      IF_ID_inst <= inst;   
+      if(if_id_write == 1)
+        IF_ID_inst <= inst;   
   end
 
   HazardDetectoinUnit hazard_detectoin_unit(
-    .opcode(), // input : use_rs1, use_rs2
-    .rs1(), // input : rs1_ID
-    .rs2(), // input : rs2_ID
-    .id_ex_rd(), // input : rd_EX
-    .id_ex_memread(),
-    .pcwrite(), //output
-    .if_id_write(), //output
-    .control_mux() //output : MUX input 용도(필요시 0 연결)
+    .opcode(IF_ID_inst[6:0]), // input : use_rs1, use_rs2
+    .rs1(IF_ID_inst[19:15]), // input : rs1_ID
+    .rs2(IF_ID_inst[24:20]), // input : rs2_ID
+    .id_ex_rd(ID_EX_rd), // input : rd_EX
+    .id_ex_memread(ID_EX_mem_read),
+    .pcwrite(pcwrite), //output
+    .if_id_write(if_id_write), //output
+    .control_mux(control_mux) //output : MUX input 용도(필요시 0 연결)
   );
 
   // ---------- Register File ----------
@@ -138,9 +143,15 @@ module cpu(input reset,       // positive reset signal
     .mem_write(mem_write),   // output
     .alu_src(alu_src),       // output
     .write_enable(write_enable), // output
-    .pc_to_reg(pc_to_reg),   // output
     .alu_op(alu_op),         // output
-    .is_ecall(is_halted)     // output (ecall inst)
+    .is_ecall(is_ecall)      // output (ecall inst)
+  );
+
+  mux21 #(8) control_signal(
+    .S(control_mux), 
+    .D0({mem_read, mem_to_reg, mem_write, alu_src, write_enable, alu_op, is_ecall}), 
+    .D1(8'b0), 
+    .Y(control_output)
   );
 
   // ---------- Immediate Generator ----------
@@ -158,6 +169,7 @@ module cpu(input reset,       // positive reset signal
       ID_EX_mem_read   <= 0;  
       ID_EX_mem_to_reg <= 0;
       ID_EX_reg_write  <= 0; 
+      ID_EX_is_ecall   <= 0;
       ID_EX_rs1_data   <= 0;
       ID_EX_rs2_data   <= 0;
       ID_EX_imm        <= 0;
@@ -166,12 +178,7 @@ module cpu(input reset,       // positive reset signal
       ID_EX_rs2        <= 0;
       ID_EX_rd         <= 0;
     end else begin
-      ID_EX_alu_op     <= alu_op;    
-      ID_EX_alu_src    <= alu_src;   
-      ID_EX_mem_write  <= mem_write; 
-      ID_EX_mem_read   <= mem_read;  
-      ID_EX_mem_to_reg <= mem_to_reg;
-      ID_EX_reg_write  <= reg_write; 
+      {ID_EX_mem_read, ID_EX_mem_to_reg, ID_EX_mem_write, ID_EX_alu_src, ID_EX_reg_write, ID_EX_alu_op, ID_EX_is_ecall} = control_output;
       ID_EX_rs1_data   <= rs1_dout;
       ID_EX_rs2_data   <= rs2_dout;
       ID_EX_imm        <= imm_gen_out;

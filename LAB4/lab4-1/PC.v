@@ -1,7 +1,8 @@
 
-module PC(reset, clk, next_pc, curr_pc);
+module PC(reset, clk, pcwrite, next_pc, curr_pc);
     input reset;
     input clk;
+    input pcwrite;
     input [31:0] next_pc;
     output reg[31:0] curr_pc;
 
@@ -13,7 +14,8 @@ module PC(reset, clk, next_pc, curr_pc);
         if (reset)
             curr_pc <= 0;
         else 
-            curr_pc <= next_pc;
+            if(pcwrite == 1)
+                curr_pc <= next_pc;
     end
 endmodule
 
