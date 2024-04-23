@@ -102,6 +102,17 @@ module cpu(input reset,       // positive reset signal
       IF_ID_inst <= inst;   
   end
 
+  HazardDetectoinUnit hazard_detectoin_unit(
+    .opcode(), // input : use_rs1, use_rs2
+    .rs1(), // input : rs1_ID
+    .rs2(), // input : rs2_ID
+    .id_ex_rd(), // input : rd_EX
+    .id_ex_memread(),
+    .pcwrite(), //output
+    .if_id_write(), //output
+    .control_mux() //output : MUX input 용도(필요시 0 연결)
+  );
+
   // ---------- Register File ----------
   RegisterFile reg_file (
     .reset (reset),           // input
@@ -185,6 +196,17 @@ module cpu(input reset,       // positive reset signal
     .alu_in_2(alu_in_2),       // input
     .alu_result(alu_result),   // output
     .alu_zero(bcond)           // output
+  );
+
+  ForwardingUnit forwarding_unit(
+    .ex_mem_rd(), // input
+    .ex_mem_RW(), // input
+    .mem_wb_rd(), // input
+    .mem_wb_RW(), // input
+    .rs1(), // input
+    .rs2(), // input
+    .mux_forward_A(), //output
+    .mux_forward_B()  //output
   );
 
   // Update EX/MEM pipeline registers here
