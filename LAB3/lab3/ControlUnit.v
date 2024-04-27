@@ -15,28 +15,33 @@ module ControlUnit (reset, clk, bcond, opcode, regist_17, pcwritecond, pcwrite, 
     output reg memtoreg;       
     output reg irwrite;         
     output reg pcsource;
-    output reg [1:0] aluop; // {00 : lw, sw},{01 : beq}, {10 : R-type}, {11 : ID, PC + 4}
+    output reg [1:0] aluop; // {00 : add},{01 : sub(I-type)}, {10 : R-type}, {11 : branch}
     output reg [1:0] alusrcB;       
     output reg alusrcA;        
     output reg regwrite;        
     output reg is_ecall; // ECALL
 
-    // Define each control signal position
-    localparam PCWRITECOND = 14;
-    localparam PCWRITE  = 13;
-    localparam IORD     = 12;
-    localparam MEMREAD  = 11;
-    localparam MEMWRITE = 10;
-    localparam MEMTOREG = 9;
-    localparam IRWRITE  = 8;
-    localparam PCSOURCE = 7;
-    localparam ALUOP    = 5; // 2 bits
-    localparam ALUSRCB  = 3; // 2 bits
-    localparam ALUSRCA  = 2;
-    localparam REGWRITE = 1;
-    localparam IS_ECALL = 0;
+    // Define control signal masks
+    localparam [14:0] PCWRITECOND = 15'b100000000000000;
+    localparam [14:0] PCWRITE     = 15'b010000000000000;
+    localparam [14:0] IORD        = 15'b001000000000000;
+    localparam [14:0] MEMREAD     = 15'b000100000000000;
+    localparam [14:0] MEMWRITE    = 15'b000010000000000;
+    localparam [14:0] MEMTOREG    = 15'b000001000000000;
+    localparam [14:0] IRWRITE     = 15'b000000100000000;
+    localparam [14:0] PCSOURCE    = 15'b000000010000000;
+    localparam [14:0] ALUOP0      = 15'b000000000000000; // ALUOp : Add
+    localparam [14:0] ALUOP1      = 15'b000000000100000; // ALUOp : I-type
+    localparam [14:0] ALUOP2      = 15'b000000001000000; // ALUOp : R-type
+    localparam [14:0] ALUOP3      = 15'b000000001100000; // ALUOp : B-type
+    localparam [14:0] ALUSRCB0    = 15'b000000000000000; // Mask for 2-bit ALUSRCB
+    localparam [14:0] ALUSRCB1    = 15'b000000000001000; // Mask for 2-bit ALUSRCB
+    localparam [14:0] ALUSRCB2    = 15'b000000000010000; // Mask for 2-bit ALUSRCB
+    localparam [14:0] ALUSRCA     = 15'b000000000000100;
+    localparam [14:0] REGWRITE    = 15'b000000000000010;
+    localparam [14:0] IS_ECALL    = 15'b000000000000001;
 
-    reg [N-1:0] state;      // Microprogram Counter
+    reg [3:0] state;      // Microprogram Counter
     reg [14:0] controlWord; // Control Word from Microcode Storage
 
     // Address select logic
@@ -46,10 +51,7 @@ module ControlUnit (reset, clk, bcond, opcode, regist_17, pcwritecond, pcwrite, 
         end else begin
             case(state)
                 `start : state <= `IF;
-                `IF : begin 
-                    if(opcode == `ECALL) state <= `ISECALL;
-                    else state <= `ID;
-                end                
+                `IF : state <= `ID;               
                 `ID : begin
                     case(opcode)
                         `ARITHMETIC : state <= `Rtype_EX;
@@ -59,6 +61,11 @@ module ControlUnit (reset, clk, bcond, opcode, regist_17, pcwritecond, pcwrite, 
                         `BRANCH : state <= `Bxx_EX_not_taken;
                         `JAL : state <= `JAL_WB;
                         `JALR : state <= `JALR_WB;
+                        `ECALL : begin
+                           if(regist_17 == 10) state <= `ISECALL;
+                           else state <= `AGAIN;
+                        end
+                        default : state <= `ID;
                     endcase
                 end
                 `Rtype_EX : state <= `IRtype_WB;
@@ -66,23 +73,24 @@ module ControlUnit (reset, clk, bcond, opcode, regist_17, pcwritecond, pcwrite, 
                 `IRtype_WB : state <= `IF;
                 `LDSD_EX : begin
                     case(opcode)
-                        `LOAD = state <= `LD_MEM;
-                        `STORE = state <= `SD_MEM;
+                        `LOAD : state <= `LD_MEM;
+                        `STORE : state <= `SD_MEM;
+                        default: state <= `LDSD_EX;
                     endcase                    
                 end  
                 `SD_MEM : state <= `IF;              
                 `LD_MEM : state <= `LD_WB;
-                `LD_MEM : state <= `IF;
+                `LD_WB : state <= `IF;
                 `Bxx_EX_not_taken : begin 
-                    if(bcond) state <= `IF;
+                    if(!bcond) state <= `IF;
                     else state <= `Bxx_EX_taken;
                 end
                 `Bxx_EX_taken : state <= `IF;
                 `JAL_WB : state <= `IF;              
                 `JALR_WB : state <= `IF;
-                `ISECALL : state <= `ISECALL;
-                default:
-                    state <= 0;              
+                `AGAIN : state <= `IF;
+                `ISECALL : state <= `ISECALL;                
+                default: state <= 0;              
             endcase
         end  
     end
@@ -91,44 +99,42 @@ module ControlUnit (reset, clk, bcond, opcode, regist_17, pcwritecond, pcwrite, 
     always @(*) begin
         case(state) 
             `start : 
-                controlWord = 15'b0000000000000            
-            `IF : // IR <- MEM[PC]
-                controlWord = (1 << MEMREAD) | (1 << IRWRITE);          
-            `ID : // A <- RF[rs(IR)], B <- RF[rs(IR)], ALUOut <- PC+4
-                controlWord = (0 << ALUSRCA) | (2'b01 << ALUSRCB) | (2'b11 << ALUOP)            
-            
+                controlWord = 15'b0000000000000;            
+            `IF : // IR <- MEM[PC]         
+                controlWord = MEMREAD | IRWRITE;
+            `ID : // A <- RF[rs(IR)], B <- RF[rs(IR)], ALUOut <- PC+4 
+                controlWord = ALUSRCB1 | ALUOP0;             
             `Rtype_EX : // ALUOut <- A + B
-                controlWord = (1 << ALUSRCA) | (2'b00 << ALUSRCB) | (2'b10 << ALUOP) 
+                controlWord = ALUSRCA | ALUSRCB0 | ALUOP2; 
             `Itype_EX : // ALUOut <- A + imm(IR)
-                controlWord = (1 << ALUSRCA) | (2'b10 << ALUSRCB) | (2'b10 << ALUOP)           
-            `IRtype_WB : // RF[rd(IR)] <- ALUOut, PC <- PC+4
-                controlWord = (1 << REGWRITE) | (0 << MEMTOREG) | (0 << ALUSRCA) | (2'b01 << ALUSRCB) | (0 << PCSOURCE) | (1 << PCWRITE) | (2'b11 << ALUOP)
-            
-            `LDSD_EX : // ALUOut <- A + imm(IR)
-                controlWord = (1 << ALUSRCA) | (2'b10 << ALUSRCB) | (2'b00 << ALUOP)             
-            `SD_MEM : // MEM[ALUOut] <- B, PC <- PC+4
-                controlWord = (1 << IORD) | (1 << MEMWRITE) | (0 << ALUSRCA) | (2'b01 << ALUSRCB) | (0 << PCSOURCE) | (1 << PCWRITE) | (2'b11 << ALUOP)            
+                controlWord = ALUSRCA | ALUSRCB2 | ALUOP1;      
+            `IRtype_WB : // RF[rd(IR)] <- ALUOut, PC <- PC+4 (MEMTOREG = 0, ALUSRCA = 0, PCSOURCE = 0)
+                controlWord = REGWRITE | ALUSRCB1 | ALUOP0 | PCWRITE;
+
+            `LDSD_EX : // ALUOut <- A + imm(IR) 
+                controlWord = ALUSRCA | ALUSRCB2 | ALUOP0;              
+            `SD_MEM : // MEM[ALUOut] <- B, PC <- PC+4 (ALUSRCA = 0, PCSOURCE = 0)        
+                controlWord = IORD | MEMWRITE | ALUSRCB1 | ALUOP0 | PCWRITE;      
             `LD_MEM : // MDR <- MEM[ALUOut]
-                controlWord = (1 << IORD) | (1 << MEMREAD)             
-            `LD_WB : // RF[rd(IR)] <- MDR, PC <- PC+4
-                controlWord = (1 << REGWRITE) | (1 << MEMTOREG) | (0 << ALUSRCA) | (2'b01 << ALUSRCB) | (0 << PCSOURCE) | (1 << PCWRITE) | (2'b11 << ALUOP)
+                controlWord = IORD | MEMREAD;            
+            `LD_WB : // RF[rd(IR)] <- MDR, PC <- PC+4 (ALUSRCA = 0, PCSOURCE = 0)        
+                controlWord = REGWRITE | MEMTOREG | ALUSRCB1 | ALUOP0 | PCWRITE;   
             
             `Bxx_EX_not_taken : // if not taken : {PC <- ALUOut}
-                controlWord = (1 << PCWRITECOND) | (2'b01 << ALUOP) | (1 < PCSOURCE)                 
-            `Bxx_EX_taken : // if taken : {PC <- PC + imm(IR)}
-                controlWord = (0 << ALUSRCA) | (2'b10 << ALUSRCB) | (0 << PCSOURCE) | (1 << PCWRITE) | (2'b11 << ALUOP)            
+                controlWord = ALUSRCA | ALUOP3 | PCWRITECOND | PCSOURCE;               
+            `Bxx_EX_taken : // if taken : {PC <- PC + imm(IR)} (ALUSRCA = 0, PCSOURCE = 0)       
+                controlWord = ALUSRCB2 | ALUOP0 | PCWRITE;         
             
-            `JAL_WB : // RF[rd(IR)] <- ALUOut, PC <- PC + Imm(IR)
-                controlWord = (1 << REGWRITE) | (0 << MEMTOREG) | (0 << ALUSRCA) | (0 << ALUSRCA) | (2'b10 << ALUSRCB) | (0 << PCSOURCE) | (1 << PCWRITE) | (2'b11 << ALUOP)            
-            `JALR_WB : // RF[rd(IR)] <- ALUOut, PC <- A + Imm(IR)
-                controlWord = (1 << REGWRITE) | (0 << MEMTOREG) | (0 << ALUSRCA) | (1 << ALUSRCA) | (2'b10 << ALUSRCB) | (0 << PCSOURCE) | (1 << PCWRITE) | (2'b11 << ALUOP)
+            `JAL_WB : // RF[rd(IR)] <- ALUOut, PC <- PC + Imm(IR) (MEMTOREG = 0, ALUSRCA = 0, PCSOURCE = 0)           
+                controlWord = REGWRITE | ALUSRCB2 | ALUOP0 | PCWRITE;            
+            `JALR_WB : // RF[rd(IR)] <- ALUOut, PC <- A + Imm(IR) (MEMTOREG = 0, ALUSRCA = 0, PCSOURCE = 0, )
+                controlWord = REGWRITE | ALUSRCA | ALUSRCB2 | ALUOP0 | PCWRITE;   
+            
+            `AGAIN : // PC <- PC+4
+                controlWord = ALUSRCB1 | ALUOP0 | PCWRITE;   
+            `ISECALL : //ECALL
+                controlWord = IS_ECALL;
 
-            `ISECALL : begin //ECALL
-                if(regist_17 == 10) 
-                    is_ecall = 1;
-                else 
-                    is_ecall = 0;
-            end
             default :
                 controlWord = 15'b0000000000000;
         endcase        
@@ -136,7 +142,8 @@ module ControlUnit (reset, clk, bcond, opcode, regist_17, pcwritecond, pcwrite, 
 
     // Decode datapath control outputs
     always @(*) begin
-        {pcwritecond, pcwrite, iord, memread, memwrite, memtoreg, irwrite, pcsource, alusrcB, alusrcA, regwrite, is_ecall} = controlWord;
+        {pcwritecond, pcwrite, iord, memread, memwrite, memtoreg, irwrite, pcsource, aluop, alusrcB, alusrcA, regwrite, is_ecall} = controlWord;
     end
 
 endmodule
+
