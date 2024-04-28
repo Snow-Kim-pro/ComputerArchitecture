@@ -88,8 +88,8 @@ module ControlUnit (reset, clk, bcond, opcode, regist_17, pcwritecond, pcwrite, 
                 `Bxx_EX_taken : state <= `IF;
                 `JAL_WB : state <= `IF;              
                 `JALR_WB : state <= `IF;
-                `ISECALL : state <= `ISECALL;
                 `AGAIN : state <= `IF;
+                `ISECALL : state <= `ISECALL;                
                 default: state <= 0;              
             endcase
         end  

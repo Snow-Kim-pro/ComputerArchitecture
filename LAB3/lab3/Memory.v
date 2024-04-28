@@ -29,7 +29,7 @@ module Memory #(parameter MEM_DEPTH = 16384) (input reset,
        $readmemh("student_tb/ifelse_mem.txt", mem);
       // $readmemh("student_tb/loop_mem.txt", mem);
       // $readmemh("student_tb/non-controlflow_mem.txt", mem);
-      // $readmemh("student_tb/recursive_mem.txt", mem);
+      $readmemh("student_tb/recursive_mem.txt", mem);
     end
 
     // Synchronously write data to the memory
