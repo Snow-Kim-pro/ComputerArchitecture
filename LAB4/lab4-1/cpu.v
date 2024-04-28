@@ -10,7 +10,7 @@
 
 module cpu(input reset,       // positive reset signal
            input clk,         // clock signal
-           output is_halted, // Whehther to finish simulation
+           output is_halted,  // Whehther to finish simulation
            output [31:0]print_reg[0:31]); // Whehther to finish simulation
   /***** Wire declarations *****/
   wire [31:0] curr_pc, next_pc, inst;
@@ -122,10 +122,7 @@ module cpu(input reset,       // positive reset signal
   );
   
   // Check halted
-  always @(*) begin
-    if(MEM_WB_is_ecall && (print_reg[17] == 10))
-      is_halted = 1;
-  end
+  assign is_halted = (MEM_WB_is_ecall && (print_reg[17] == 10)) ? 1 : 0; 
 
   // ---------- Register File ----------
   RegisterFile reg_file (
@@ -265,7 +262,7 @@ module cpu(input reset,       // positive reset signal
       EX_MEM_reg_write  <= ID_EX_reg_write; 
       EX_MEM_is_ecall   <= ID_EX_is_ecall;
       EX_MEM_alu_out    <= alu_result;
-      EX_MEM_dmem_data  <= ID_EX_rs2_data;
+      EX_MEM_dmem_data  <= alu_src2_out;
       EX_MEM_rd         <= ID_EX_rd;
     end
   end
@@ -274,7 +271,7 @@ module cpu(input reset,       // positive reset signal
   DataMemory dmem(
     .reset (reset),                // input
     .clk (clk),                    // input
-    .addr (EX_MEM_alu_out),        //  input
+    .addr (EX_MEM_alu_out),        // input
     .din (EX_MEM_dmem_data),       // input
     .mem_read (EX_MEM_mem_read),   // input
     .mem_write (EX_MEM_mem_write), // input
