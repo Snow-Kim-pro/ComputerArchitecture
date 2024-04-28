@@ -28,19 +28,17 @@ module cpu(input reset,       // positive reset signal
 
   /***** Register declarations *****/
 
-
-
   // You need to modify the width of registers
   // In addition, 
   // 1. You might need other pipeline registers that are not described below
   // 2. You might not need registers described below
   
   /***** IF/ID pipeline registers *****/
-  reg [31:0]IF_ID_inst;           // will be used in ID stage  
+  reg [31:0]IF_ID_inst;     // will be used in ID stage  
 
   /***** ID/EX pipeline registers *****/
   // From the control unit
-  reg [1:0] ID_EX_alu_op;         // will be used in EX stage
+  reg [1:0] ID_EX_alu_op;   // will be used in EX stage
   reg ID_EX_alu_src;        // will be used in EX stage
   reg ID_EX_mem_write;      // will be used in MEM stage
   reg ID_EX_mem_read;       // will be used in MEM stage
@@ -136,14 +134,14 @@ module cpu(input reset,       // positive reset signal
 
   // ---------- Control Unit ----------
   ControlUnit ctrl_unit (
-    .part_of_inst(IF_ID_inst[6:0]), // input
-    .mem_read(mem_read),            // output
-    .mem_to_reg(mem_to_reg),        // output
-    .mem_write(mem_write),          // output
-    .alu_src(alu_src),              // output
-    .write_enable(write_enable),    // output
-    .alu_op(alu_op),                // output
-    .is_ecall(is_ecall)             // output (ecall inst)
+    .opcode(IF_ID_inst[6:0]),    // input
+    .mem_read(mem_read),         // output
+    .mem_to_reg(mem_to_reg),     // output
+    .mem_write(mem_write),       // output
+    .alu_src(alu_src),           // output
+    .write_enable(write_enable), // output
+    .alu_op(alu_op),             // output
+    .is_ecall(is_ecall)          // output (ecall inst)
   );
 
   mux21 #(8) control_signal(
