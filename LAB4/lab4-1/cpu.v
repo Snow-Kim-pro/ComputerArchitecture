@@ -222,11 +222,11 @@ module cpu(input reset,       // positive reset signal
 
   ForwardingUnit forwarding_unit(
     .ex_mem_rd(EX_MEM_rd),        // input
-    .ex_mem_RW(EX_MEM_reg_write), // input
     .mem_wb_rd(MEM_WB_rd),        // input
-    .mem_wb_RW(MEM_WB_reg_write), // input
     .rs1(ID_EX_rs1),              // input
     .rs2(ID_EX_rs2),              // input
+    .ex_mem_RW(EX_MEM_reg_write), // input
+    .mem_wb_RW(MEM_WB_reg_write), // input    
     .alusrc(ID_EX_alu_src),       // input
     .mux_forward_A(foward_A),     //output : 2bit(default : 2'b00)
     .mux_forward_B(foward_B)      //output : 2bit(default : 2'b00)
