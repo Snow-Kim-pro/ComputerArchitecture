@@ -21,7 +21,7 @@ module cpu(input reset,       // positive reset signal
   wire [31:0] rs1_dout, rs2_dout, imm_gen_out;
   wire [7:0] control_output;
 
-  wire [31:0] alu_in_1, alu_in_2, alu_result;
+  wire [31:0] alu_in_1, alu_in_2, alu_src2_out, alu_result;
   wire [3:0] alu_control;
   wire [1:0] foward_A, foward_B;
 
@@ -61,6 +61,7 @@ module cpu(input reset,       // positive reset signal
   reg EX_MEM_is_branch;     // will be used in MEM stage
   reg EX_MEM_mem_to_reg;    // will be used in WB stage
   reg EX_MEM_reg_write;     // will be used in WB stage
+  reg EX_MEM_is_ecall;
   // From others
   reg [31:0] EX_MEM_alu_out;
   reg [31:0] EX_MEM_dmem_data;
@@ -70,6 +71,7 @@ module cpu(input reset,       // positive reset signal
   // From the control unit
   reg MEM_WB_mem_to_reg;    // will be used in WB stage
   reg MEM_WB_reg_write;     // will be used in WB stage
+  reg MEM_WB_is_ecall;
   // From others
   reg [31:0] MEM_WB_mem_to_reg_src_0;
   reg [31:0] MEM_WB_mem_to_reg_src_1;
@@ -118,6 +120,12 @@ module cpu(input reset,       // positive reset signal
     .if_id_write(if_id_write),      //output
     .control_mux(control_mux)       //output : MUX input 용도(필요시 0 연결)
   );
+  
+  // Check halted
+  always @(*) begin
+    if(MEM_WB_is_ecall && (print_reg[17] == 10))
+      is_halted = 1;
+  end
 
   // ---------- Register File ----------
   RegisterFile reg_file (
@@ -125,7 +133,7 @@ module cpu(input reset,       // positive reset signal
     .clk (clk),               // input
     .rs1 (IF_ID_inst[19:15]), // input
     .rs2 (IF_ID_inst[24:20]), // input
-    .rd  (IF_ID_inst[11: 7]), // input
+    .rd  (MEM_WB_rd),         // input
     .rd_din (wb_dout),        // input
     .write_enable (MEM_WB_reg_write), // input
     .rs1_dout (rs1_dout),     // output
@@ -197,19 +205,26 @@ module cpu(input reset,       // positive reset signal
   mux41 ALUSRC1(
     .S (foward_A),       // input
     .D0(ID_EX_rs1_data), // input 
-    .D1(32'b0),          // input
-    .D2(EX_MEM_alu_out), // input 
-    .D3(wb_dout),        // input
+    .D1(EX_MEM_alu_out), // input
+    .D2(wb_dout),        // input 
+    .D3(32'b0),          // input
     .Y (alu_in_1)        // output
   );
 
   mux41 ALUSRC2(
     .S (foward_B),       // input
     .D0(ID_EX_rs2_data), // input 
-    .D1(ID_EX_imm),      // input
-    .D2(EX_MEM_alu_out), // input 
-    .D3(wb_dout),        // input
-    .Y (alu_in_2)        // output
+    .D1(EX_MEM_alu_out), // input
+    .D2(wb_dout),        // input 
+    .D3(32'b0),          // input
+    .Y (alu_src2_out)    // output
+  );
+
+  mux21 ALUSRC_IMM(
+    .S (ID_EX_alu_src), // input
+    .D0(alu_src2_out),  // input 
+    .D1(ID_EX_imm),     // input
+    .Y (alu_in_2)       // output
   );
 
   // ---------- ALU ----------
@@ -228,7 +243,6 @@ module cpu(input reset,       // positive reset signal
     .rs2(ID_EX_rs2),              // input
     .ex_mem_RW(EX_MEM_reg_write), // input
     .mem_wb_RW(MEM_WB_reg_write), // input    
-    .alusrc(ID_EX_alu_src),       // input
     .mux_forward_A(foward_A),     //output : 2bit(default : 2'b00)
     .mux_forward_B(foward_B)      //output : 2bit(default : 2'b00)
   );
@@ -240,6 +254,7 @@ module cpu(input reset,       // positive reset signal
       EX_MEM_mem_read   <= 0;  
       EX_MEM_mem_to_reg <= 0;
       EX_MEM_reg_write  <= 0; 
+      EX_MEM_is_ecall   <= 0;
       EX_MEM_alu_out    <= 0;
       EX_MEM_dmem_data  <= 0;
       EX_MEM_rd         <= 0;
@@ -248,6 +263,7 @@ module cpu(input reset,       // positive reset signal
       EX_MEM_mem_read   <= ID_EX_mem_read;  
       EX_MEM_mem_to_reg <= ID_EX_mem_to_reg;
       EX_MEM_reg_write  <= ID_EX_reg_write; 
+      EX_MEM_is_ecall   <= ID_EX_is_ecall;
       EX_MEM_alu_out    <= alu_result;
       EX_MEM_dmem_data  <= ID_EX_rs2_data;
       EX_MEM_rd         <= ID_EX_rd;
@@ -269,13 +285,15 @@ module cpu(input reset,       // positive reset signal
   always @(posedge clk) begin
     if (reset) begin
       MEM_WB_mem_to_reg <= 0;    
-      MEM_WB_reg_write <= 0;     
+      MEM_WB_reg_write  <= 0;   
+      MEM_WB_is_ecall   <= 0;  
       MEM_WB_mem_to_reg_src_0 <= 0;
       MEM_WB_mem_to_reg_src_1 <= 0;
       MEM_WB_rd <= 0;
     end else begin
       MEM_WB_mem_to_reg <= EX_MEM_mem_to_reg;    
-      MEM_WB_reg_write <= EX_MEM_reg_write;     
+      MEM_WB_reg_write  <= EX_MEM_reg_write;     
+      MEM_WB_is_ecall   <= EX_MEM_is_ecall; 
       MEM_WB_mem_to_reg_src_0 <= EX_MEM_alu_out;
       MEM_WB_mem_to_reg_src_1 <= mem_dout;
       MEM_WB_rd <= EX_MEM_rd;
