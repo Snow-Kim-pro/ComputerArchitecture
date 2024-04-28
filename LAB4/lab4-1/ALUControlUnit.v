@@ -31,7 +31,7 @@ module ALUControlUnit(part_of_inst, alu_op, alu_control);
       end       
       2'b10 : begin // R-type
         case(funct3)
-          `FUNCT3_ADD : alu_control = (sub_or_not == 1) 1'b1 : 1'b0;
+          `FUNCT3_ADD : alu_control = (sub_or_not == 1) ?  1: 0;
           `FUNCT3_AND : alu_control = 2; // and
           `FUNCT3_OR  : alu_control = 3; // or
           `FUNCT3_XOR : alu_control = 4; // xor

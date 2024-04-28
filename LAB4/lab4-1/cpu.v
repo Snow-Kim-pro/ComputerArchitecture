@@ -16,9 +16,10 @@ module cpu(input reset,       // positive reset signal
   wire [31:0] curr_pc, next_pc, inst;
   wire pcwrite, if_id_write, control_mux;
   
-  wire mem_read, mem_to_reg, mem_write, alu_src, write_enable, pc_to_reg, alu_op, is_ecall, bcond;
+  wire mem_read, mem_to_reg, mem_write, alu_src, write_enable, pc_to_reg, is_ecall, bcond;
+  wire [1:0] alu_op;
   wire [31:0] rs1_dout, rs2_dout, imm_gen_out;
-  wire [8:0] control_output;
+  wire [7:0] control_output;
 
   wire [31:0] alu_in_1, alu_in_2, alu_result;
   wire [3:0] alu_control;
@@ -175,7 +176,7 @@ module cpu(input reset,       // positive reset signal
       ID_EX_rs2        <= 0;
       ID_EX_rd         <= 0;
     end else begin
-      {ID_EX_mem_read, ID_EX_mem_to_reg, ID_EX_mem_write, ID_EX_alu_src, ID_EX_reg_write, ID_EX_alu_op, ID_EX_is_ecall} = control_output;
+      {ID_EX_mem_read, ID_EX_mem_to_reg, ID_EX_mem_write, ID_EX_alu_src, ID_EX_reg_write, ID_EX_alu_op, ID_EX_is_ecall} <= control_output;
       ID_EX_rs1_data   <= rs1_dout;
       ID_EX_rs2_data   <= rs2_dout;
       ID_EX_imm        <= imm_gen_out;
@@ -213,11 +214,11 @@ module cpu(input reset,       // positive reset signal
 
   // ---------- ALU ----------
   ALU alu (
-    .alu_control(alu_control), // input
-    .alu_in_1(alu_in_1),       // input  
-    .alu_in_2(alu_in_2),       // input
-    .alu_result(alu_result),   // output
-    .alu_zero(bcond)           // output
+    .control(alu_control), // input
+    .in_1(alu_in_1),       // input  
+    .in_2(alu_in_2),       // input
+    .result(alu_result),   // output
+    .bcond(bcond)           // output
   );
 
   ForwardingUnit forwarding_unit(

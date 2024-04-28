@@ -12,13 +12,12 @@ module HazardDetectoinUnit(opcode, rs1, rs2, id_ex_rd, id_ex_memread, pcwrite, i
     output reg control_mux;
 
     wire use_rs1, use_rs2;
+    //rs1을 쓰는가? Rtype, Itype, JALR, Bxx, LW, SW
+    assign use_rs1 = (opcode != `JAL);
+    //rs2를 쓰는가? Rtype, Bxx, SW
+    assign use_rs2 = (opcode == `ARITHMETIC || opcode == `BRANCH || opcode == `STORE);
 
     always @(*) begin
-        //rs1을 쓰는가? Rtype, Itype, JALR, Bxx, LW, SW
-        use_rs1 = (opcode != `JAL);       
-        //rs2를 쓰는가? Rtype, Bxx, SW
-        use_rs2 = (opcode == `ARITHMETIC || opcode == `BRANCH || opcode == `STORE);
-
         //MemRead를 쓰는가? LW
         if((((rs1 == id_ex_rd) && (use_rs1)) || ((rs2 == id_ex_rd) && (use_rs2))) && id_ex_memread) begin
             pcwrite = 0;
