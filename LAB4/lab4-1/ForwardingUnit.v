@@ -6,7 +6,6 @@ module ForwardingUnit(
     input [4:0] rs2,
     input ex_mem_RW,
     input mem_wb_RW,
-    input alusrc,
     output reg [1:0] mux_forward_A,
     output reg [1:0] mux_forward_B
 );
@@ -20,16 +19,13 @@ module ForwardingUnit(
         else
             mux_forward_A = 2'b00; // dist = 3
 
-        if(alusrc == 1)
-            mux_forward_B = 2'b01;
-        else begin 
-            if((rs2 != 0) && (rs2 == ex_mem_rd) && ex_mem_RW)
-                mux_forward_B = 2'b10; // dist = 1
-            else if((rs2 != 0) && (rs2 == mem_wb_rd) && mem_wb_RW)
-                mux_forward_B = 2'b11; // dist = 2
-            else
-                mux_forward_B = 2'b00; // dist = 3
-        end  
+        if((rs2 != 0) && (rs2 == ex_mem_rd) && ex_mem_RW)
+            mux_forward_B = 2'b10; // dist = 1
+        else if((rs2 != 0) && (rs2 == mem_wb_rd) && mem_wb_RW)
+            mux_forward_B = 2'b11; // dist = 2
+        else
+            mux_forward_B = 2'b00; // dist = 3
+            
     end
 
 endmodule
