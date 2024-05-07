@@ -5,7 +5,7 @@ module ControlUnit (
     output reg is_jal,          // JAL
     output reg is_jalr,         // JALR
     output reg branch,          // Branch
-    output reg pc_to_reg;       // PCtoReg
+    output reg pc_to_reg,       // PCtoReg
 
     output reg mem_read,        // MemRead
     output reg mem_to_reg,      // MemtoReg
