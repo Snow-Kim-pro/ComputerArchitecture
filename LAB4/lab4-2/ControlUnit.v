@@ -35,8 +35,10 @@ module ControlUnit (
         else if(opcode == `ARITHMETIC_IMM)
             alu_op = 2'b01;
         else if(opcode == `ARITHMETIC)
-            alu_op = 2'b10;  
-        else // 추후 Branch/JAL(R) 추가할 것   
+            alu_op = 2'b10; 
+        else if(opcode == `BRANCH)
+            alu_op = 2'b11;  
+        else // default(include JALR)
             alu_op = 2'b00;  
     end
 
