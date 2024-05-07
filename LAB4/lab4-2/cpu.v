@@ -13,23 +13,24 @@ module cpu(input reset,       // positive reset signal
            output is_halted, // Whehther to finish simulation
            output [31:0]print_reg[0:31]); // Whehther to finish simulation
   /***** Wire declarations *****/
-  wire [31:0] curr_pc, pc_add4, inst;
-  wire [31:0] rs1_dout, rs2_dout;
+  wire [31:0] curr_pc, pc_add4, pc_addr, pc_result, inst;
+  wire [31:0] write_data, rs1_dout, rs2_dout;
   
-  wire mem_read, mem_to_reg, mem_write, alu_src, write_enable, pc_to_reg, alu_op, is_ecall, bcond;
+  wire jal, jalr, branch, pc_to_reg;
+  wire mem_read, mem_to_reg, mem_write, alu_src, write_enable, alu_op, is_ecall, bcond;
   wire pcwrite, if_id_write, control_mux;
   wire [31:0] imm_gen_out;
-  wire [8:0] control_output;
+  wire [11:0] control_output;
   wire [3:0] alu_control;
-  wire foward_A, foward_B;
+  wire foward_A, foward_B, PCSrc1;
 
-  wire [31:0] pc_addr, alu_in_1, alu_in_2, alu_result;
+  wire [31:0] alu_in_1, alu_in_2, alu_result;
 
   wire [31:0] mem_dout, wb_dout;
 
+  assign PCSrc1 = (ID_EX_branch & bcond) | ID_EX_jal;
+
   /***** Register declarations *****/
-
-
 
   // You need to modify the width of registers
   // In addition, 
@@ -37,25 +38,32 @@ module cpu(input reset,       // positive reset signal
   // 2. You might not need registers described below
   
   /***** IF/ID pipeline registers *****/
-  reg [31:0]IF_ID_inst;           // will be used in ID stage  
+  reg [31:0]IF_ID_inst;     // will be used in ID stage  
+  reg [31:0]IF_ID_pc; 
 
   /***** ID/EX pipeline registers *****/
   // From the control unit
-  reg [1:0] ID_EX_alu_op;         // will be used in EX stage
+  reg [1:0] ID_EX_alu_op;   // will be used in EX stage
   reg ID_EX_alu_src;        // will be used in EX stage
   reg ID_EX_mem_write;      // will be used in MEM stage
   reg ID_EX_mem_read;       // will be used in MEM stage
   reg ID_EX_mem_to_reg;     // will be used in WB stage
   reg ID_EX_reg_write;      // will be used in WB stage
+  reg ID_EX_jal;  
+  reg ID_EX_jalr;  
+  reg ID_EX_branch;  
+  reg ID_EX_pc_ro_reg;
   reg ID_EX_is_ecall;
   // From others
   reg [31:0] ID_EX_rs1_data;
   reg [31:0] ID_EX_rs2_data;
   reg [31:0] ID_EX_imm;
+  reg [31:0] ID_EX_pc;
   reg [3:0] ID_EX_ALU_ctrl_unit_input;  
   reg [4:0] ID_EX_rs1;                    
   reg [4:0] ID_EX_rs2;                   
-  reg [4:0] ID_EX_rd;                    
+  reg [4:0] ID_EX_rd;        
+
   /***** EX/MEM pipeline registers *****/
   // From the control unit
   reg EX_MEM_mem_write;     // will be used in MEM stage
@@ -90,7 +98,27 @@ module cpu(input reset,       // positive reset signal
   add_alu add4_PC(
     .alu_in_1(curr_pc),  // input
     .alu_in_2(4),        // input
-    .alu_result(next_pc) // output
+    .alu_result(pc_add4) // output
+  );
+
+  add_alu addr_PC(
+    .alu_in_1(ID_EX_pc),  // input
+    .alu_in_2(ID_EX_imm), // input
+    .alu_result(pc_addr)  // output
+  );
+
+  mux21 PCS1(
+    .S(PCSrc1),   // input
+    .D0(pc_add4), // input
+    .D1(pc_addr), // input
+    .Y(pc_result) // output
+  );
+
+  mux21 PCS2(
+    .S(ID_EX_jalr),  // input
+    .D0(pc_result),  // input
+    .D1(alu_result), // input
+    .Y(next_pc)      // output
   );
  
   // ---------- Instruction Memory ----------
@@ -101,24 +129,33 @@ module cpu(input reset,       // positive reset signal
     .dout(inst)     // output
   );
 
+  mux21 Write_Data(
+    .S(pc_to_reg),  // input
+    .D0(wb_dout), // input 
+    .D1( ),   // input
+    .Y(write_data)  // output
+  );
+
   // Update IF/ID pipeline registers here
   always @(posedge clk) begin
     if (reset)
       IF_ID_inst <= 0;   
+      IF_ID_pc   <= 0;  
     else 
       if(if_id_write == 1)
-        IF_ID_inst <= inst;   
+        IF_ID_inst <= inst;
+        IF_ID_pc   <= curr_pc;   
   end
 
   HazardDetectoinUnit hazard_detectoin_unit(
-    .opcode(IF_ID_inst[6:0]), // input : use_rs1, use_rs2
-    .rs1(IF_ID_inst[19:15]), // input : rs1_ID
-    .rs2(IF_ID_inst[24:20]), // input : rs2_ID
-    .id_ex_rd(ID_EX_rd), // input : rd_EX
+    .opcode(IF_ID_inst[6:0]),  // input : use_rs1, use_rs2
+    .rs1(IF_ID_inst[19:15]),   // input : rs1_ID
+    .rs2(IF_ID_inst[24:20]),   // input : rs2_ID
+    .id_ex_rd(ID_EX_rd),       // input : rd_EX
     .id_ex_memread(ID_EX_mem_read),
-    .pcwrite(pcwrite), //output
+    .pcwrite(pcwrite),         //output
     .if_id_write(if_id_write), //output
-    .control_mux(control_mux) //output : MUX input 용도(필요시 0 연결)
+    .control_mux(control_mux)  //output : MUX input 용도(필요시 0 연결)
   );
 
   // ---------- Register File ----------
@@ -128,7 +165,7 @@ module cpu(input reset,       // positive reset signal
     .rs1 (IF_ID_inst[19:15]), // input
     .rs2 (IF_ID_inst[24:20]), // input
     .rd  (IF_ID_inst[11: 7]), // input
-    .rd_din (wb_dout),        // input
+    .rd_din (write_data),     // input
     .write_enable (MEM_WB_reg_write), // input
     .rs1_dout (rs1_dout),     // output
     .rs2_dout (rs2_dout),     // output
@@ -138,19 +175,23 @@ module cpu(input reset,       // positive reset signal
   // ---------- Control Unit ----------
   ControlUnit ctrl_unit (
     .part_of_inst(IF_ID_inst[6:0]), // input
-    .mem_read(mem_read),     // output
-    .mem_to_reg(mem_to_reg), // output
-    .mem_write(mem_write),   // output
-    .alu_src(alu_src),       // output
+    .is_jal(jal),                // output
+    .is_jalr(jalr),              // output
+    .branch(branch),             // output
+    .pc_to_reg(pc_to_reg),       // output
+    .mem_read(mem_read),         // output
+    .mem_to_reg(mem_to_reg),     // output
+    .mem_write(mem_write),       // output
+    .alu_src(alu_src),           // output
     .write_enable(write_enable), // output
-    .alu_op(alu_op),         // output
-    .is_ecall(is_ecall)      // output (ecall inst)
+    .alu_op(alu_op),             // output
+    .is_ecall(is_ecall)          // output (ecall inst)
   );
 
-  mux21 #(8) control_signal(
+  mux21 #(12) control_signal(
     .S(control_mux), 
-    .D0({mem_read, mem_to_reg, mem_write, alu_src, write_enable, alu_op, is_ecall}), 
-    .D1(8'b0), 
+    .D0({jal, jalr, branch, pc_to_reg, mem_read, mem_to_reg, mem_write, alu_src, write_enable, alu_op, is_ecall}), 
+    .D1(12'b0), 
     .Y(control_output)
   );
 
@@ -169,6 +210,10 @@ module cpu(input reset,       // positive reset signal
       ID_EX_mem_read   <= 0;  
       ID_EX_mem_to_reg <= 0;
       ID_EX_reg_write  <= 0; 
+      ID_EX_jal        <= 0; // 추가
+      ID_EX_jalr       <= 0; // 추가
+      ID_EX_branch     <= 0; // 추가
+      ID_EX_pc_ro_reg  <= 0; // 추가
       ID_EX_is_ecall   <= 0;
       ID_EX_rs1_data   <= 0;
       ID_EX_rs2_data   <= 0;
@@ -178,7 +223,7 @@ module cpu(input reset,       // positive reset signal
       ID_EX_rs2        <= 0;
       ID_EX_rd         <= 0;
     end else begin
-      {ID_EX_mem_read, ID_EX_mem_to_reg, ID_EX_mem_write, ID_EX_alu_src, ID_EX_reg_write, ID_EX_alu_op, ID_EX_is_ecall} = control_output;
+      {ID_EX_jal, ID_EX_jalr, ID_EX_branch, ID_EX_pc_ro_reg, ID_EX_mem_read, ID_EX_mem_to_reg, ID_EX_mem_write, ID_EX_alu_src, ID_EX_reg_write, ID_EX_alu_op, ID_EX_is_ecall} = control_output;
       ID_EX_rs1_data   <= rs1_dout;
       ID_EX_rs2_data   <= rs2_dout;
       ID_EX_imm        <= imm_gen_out;
