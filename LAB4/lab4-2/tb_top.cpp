@@ -16,7 +16,8 @@ using namespace std;
 int sim_time = 0;
 int total_cycle = 0;
 
-void next_cycle(Vtop* dut, VerilatedVcdC* m_trace) {
+void next_cycle(Vtop *dut, VerilatedVcdC *m_trace)
+{
     dut->clk ^= 1;
     dut->eval();
     m_trace->dump(sim_time++);
@@ -26,19 +27,23 @@ void next_cycle(Vtop* dut, VerilatedVcdC* m_trace) {
     total_cycle++;
 }
 
-int main(int argc, char** argv, char** env) {
+int main(int argc, char **argv, char **env)
+{
     // TO DO : CHANGE "filename" TO PROVIDED "answer_*.txt" PATH
-    string filename = "./student_tb/answer_basic.txt";
+    // string filename = "./student_tb/answer_basic.txt";
+    // string filename = "./student_tb/answer_ifelse.txt";
+    // string filename = "./student_tb/answer_loop.txt";
     // string filename = "./student_tb/answer_non-controlflow.txt";
+    string filename = "./student_tb/answer_recursive.txt";
     ifstream file(filename);
     stringstream ss;
     string reg_hex;
 
     Verilated::commandArgs(argc, argv);
-    Vtop* dut = new Vtop;
+    Vtop *dut = new Vtop;
 
     Verilated::traceEverOn(true);
-    VerilatedVcdC* m_trace = new VerilatedVcdC;
+    VerilatedVcdC *m_trace = new VerilatedVcdC;
     dut->trace(m_trace, 999);
     m_trace->open("waveform.vcd");
 
@@ -51,7 +56,7 @@ int main(int argc, char** argv, char** env) {
     dut->reset = 1;
     dut->eval();
     m_trace->dump(sim_time++);
-    
+
     dut->clk = 1;
     dut->eval();
     m_trace->dump(sim_time++);
@@ -61,9 +66,11 @@ int main(int argc, char** argv, char** env) {
     dut->eval();
     m_trace->dump(sim_time++);
 
-    while (sim_time < MAX_SIM_TIME) {
+    while (sim_time < MAX_SIM_TIME)
+    {
         next_cycle(dut, m_trace);
-        if (dut->is_halted == 1) break;
+        if (dut->is_halted == 1)
+            break;
     }
 
     int answer_cycle;
@@ -75,7 +82,8 @@ int main(int argc, char** argv, char** env) {
     cout << "SIM TIME : " << sim_time << endl;
     cout << "TOTAL CYCLE : " << total_cycle << " (Answer : " << answer_cycle << ")" << endl;
     cout << "FINAL REGISTER OUTPUT" << endl;
-    for (int i = 0; i < 32; i = i + 1) {
+    for (int i = 0; i < 32; i = i + 1)
+    {
         ss << setw(8) << setfill('0') << hex << dut->print_reg[i];
         reg_hex = ss.str();
         ss.str("");
@@ -83,11 +91,13 @@ int main(int argc, char** argv, char** env) {
         file >> answer_reg;
         cout << setw(2) << i << " " << reg_hex << " (Answer : " << answer_reg << ")";
 
-        if (reg_hex == answer_reg) {
+        if (reg_hex == answer_reg)
+        {
             cout << endl;
             correct_count++;
         }
-        else {
+        else
+        {
             cout << " (Wrong)" << endl;
         }
     }

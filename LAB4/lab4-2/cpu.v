@@ -329,7 +329,7 @@ module cpu(input reset,       // positive reset signal
       EX_MEM_pc_to_reg  <= ID_EX_pc_ro_reg; // 추가
       EX_MEM_pc4        <= ID_EX_pc4; // 추가 
       EX_MEM_alu_out    <= alu_result;
-      EX_MEM_dmem_data  <= ID_EX_rs2_data;
+      EX_MEM_dmem_data  <= alu_src2_out;
       EX_MEM_rd         <= ID_EX_rd;
     end
   end

@@ -262,7 +262,7 @@ module cpu(input reset,       // positive reset signal
       EX_MEM_reg_write  <= ID_EX_reg_write; 
       EX_MEM_is_ecall   <= ID_EX_is_ecall;
       EX_MEM_alu_out    <= alu_result;
-      EX_MEM_dmem_data  <= alu_src2_out;
+      EX_MEM_dmem_data  <= alu_in_2;
       EX_MEM_rd         <= ID_EX_rd;
     end
   end
