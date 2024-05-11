@@ -99,8 +99,6 @@ extern const VlUnpacked<CData/*0:0*/, 128> Vtop__ConstPool__TABLE_h4cbea720_0;
 extern const VlUnpacked<CData/*0:0*/, 128> Vtop__ConstPool__TABLE_hcf214628_0;
 extern const VlUnpacked<CData/*1:0*/, 128> Vtop__ConstPool__TABLE_hae1c4c1c_0;
 extern const VlUnpacked<CData/*3:0*/, 512> Vtop__ConstPool__TABLE_h4098eea6_0;
-extern const VlUnpacked<CData/*1:0*/, 4> Vtop__ConstPool__TABLE_h2804b875_0;
-extern const VlUnpacked<CData/*0:0*/, 4> Vtop__ConstPool__TABLE_hf584dc7c_0;
 
 VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
     (void)vlSelf;  // Prevent unused variable warning
@@ -109,12 +107,10 @@ VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
     // Init
     SData/*11:0*/ top__DOT__cpu__DOT____Vcellinp__control_signal__D0;
     top__DOT__cpu__DOT____Vcellinp__control_signal__D0 = 0;
-    CData/*1:0*/ __Vtableidx1;
+    CData/*6:0*/ __Vtableidx1;
     __Vtableidx1 = 0;
-    CData/*6:0*/ __Vtableidx2;
+    SData/*8:0*/ __Vtableidx2;
     __Vtableidx2 = 0;
-    SData/*8:0*/ __Vtableidx3;
-    __Vtableidx3 = 0;
     // Body
     vlSelf->top__DOT__cpu__DOT__pc__DOT__curr_pc = vlSelf->top__DOT__cpu__DOT__curr_pc;
     vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pc_addr 
@@ -123,6 +119,8 @@ VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
         = vlSelf->top__DOT__cpu__DOT__ID_EX_pc;
     vlSelf->top__DOT__cpu__DOT__iscorrect__DOT__prediction 
         = vlSelf->top__DOT__cpu__DOT__ID_EX_prediction;
+    vlSelf->top__DOT__cpu__DOT__iscorrect__DOT__pre_pc 
+        = vlSelf->top__DOT__cpu__DOT__IF_ID_pc;
     vlSelf->top__DOT__cpu__DOT__add4_PC__DOT__alu_in_1 
         = vlSelf->top__DOT__cpu__DOT__curr_pc;
     vlSelf->top__DOT__cpu__DOT__addr_PC__DOT__alu_in_1 
@@ -264,29 +262,29 @@ VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
                                                   == (IData)(vlSelf->top__DOT__cpu__DOT__MEM_WB_rd))) 
                                               & (IData)(vlSelf->top__DOT__cpu__DOT__MEM_WB_reg_write))
                                               ? 2U : 0U));
-    __Vtableidx2 = (0x7fU & vlSelf->top__DOT__cpu__DOT__IF_ID_inst);
+    __Vtableidx1 = (0x7fU & vlSelf->top__DOT__cpu__DOT__IF_ID_inst);
     vlSelf->top__DOT__cpu__DOT__jal = Vtop__ConstPool__TABLE_hf1f34e79_0
-        [__Vtableidx2];
+        [__Vtableidx1];
     vlSelf->top__DOT__cpu__DOT__jalr = Vtop__ConstPool__TABLE_h4390399c_0
-        [__Vtableidx2];
+        [__Vtableidx1];
     vlSelf->top__DOT__cpu__DOT__branch = Vtop__ConstPool__TABLE_he4685dc5_0
-        [__Vtableidx2];
+        [__Vtableidx1];
     vlSelf->top__DOT__cpu__DOT__pc_to_reg = Vtop__ConstPool__TABLE_hbd434190_0
-        [__Vtableidx2];
+        [__Vtableidx1];
     vlSelf->top__DOT__cpu__DOT__write_enable = Vtop__ConstPool__TABLE_h0c2f5105_0
-        [__Vtableidx2];
+        [__Vtableidx1];
     vlSelf->top__DOT__cpu__DOT__mem_read = Vtop__ConstPool__TABLE_h7ca8bf9e_0
-        [__Vtableidx2];
+        [__Vtableidx1];
     vlSelf->top__DOT__cpu__DOT__mem_to_reg = Vtop__ConstPool__TABLE_h7ca8bf9e_0
-        [__Vtableidx2];
+        [__Vtableidx1];
     vlSelf->top__DOT__cpu__DOT__mem_write = Vtop__ConstPool__TABLE_ha96ed2bf_0
-        [__Vtableidx2];
+        [__Vtableidx1];
     vlSelf->top__DOT__cpu__DOT__alu_src = Vtop__ConstPool__TABLE_h4cbea720_0
-        [__Vtableidx2];
+        [__Vtableidx1];
     vlSelf->top__DOT__cpu__DOT__is_ecall = Vtop__ConstPool__TABLE_hcf214628_0
-        [__Vtableidx2];
+        [__Vtableidx1];
     vlSelf->top__DOT__cpu__DOT__alu_op = Vtop__ConstPool__TABLE_hae1c4c1c_0
-        [__Vtableidx2];
+        [__Vtableidx1];
     vlSelf->top__DOT__cpu__DOT__wb_dout = ((IData)(vlSelf->top__DOT__cpu__DOT__MEM_WB_mem_to_reg)
                                             ? vlSelf->top__DOT__cpu__DOT__MEM_WB_mem_to_reg_src_1
                                             : vlSelf->top__DOT__cpu__DOT__MEM_WB_mem_to_reg_src_0);
@@ -584,12 +582,12 @@ VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
     vlSelf->top__DOT__cpu__DOT__add4_PC__DOT__alu_result 
         = vlSelf->top__DOT__cpu__DOT__pc_add4;
     vlSelf->top__DOT__cpu__DOT__BTB__DOT__D0 = vlSelf->top__DOT__cpu__DOT__pc_add4;
-    __Vtableidx3 = ((((IData)(vlSelf->top__DOT__cpu__DOT__alu_ctrl_unit__DOT__sub_or_not)
+    __Vtableidx2 = ((((IData)(vlSelf->top__DOT__cpu__DOT__alu_ctrl_unit__DOT__sub_or_not)
                        ? 1U : 0U) << 5U) | (((IData)(vlSelf->top__DOT__cpu__DOT__alu_ctrl_unit__DOT__funct3) 
                                              << 2U) 
                                             | (IData)(vlSelf->top__DOT__cpu__DOT__ID_EX_alu_op)));
     vlSelf->top__DOT__cpu__DOT__alu_control = Vtop__ConstPool__TABLE_h4098eea6_0
-        [__Vtableidx3];
+        [__Vtableidx2];
     vlSelf->top__DOT__cpu__DOT__ALUSRC1__DOT__S = vlSelf->top__DOT__cpu__DOT__foward_A;
     vlSelf->top__DOT__cpu__DOT__forwarding_unit__DOT__mux_forward_A 
         = vlSelf->top__DOT__cpu__DOT__foward_A;
@@ -654,33 +652,10 @@ VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
                                                                   | (IData)(vlSelf->top__DOT__cpu__DOT__is_ecall)))))))))));
     vlSelf->top__DOT__cpu__DOT__Write_Data__DOT__D0 
         = vlSelf->top__DOT__cpu__DOT__wb_dout;
-    vlSelf->top__DOT__cpu__DOT__ALUSRC1__DOT__D2 = vlSelf->top__DOT__cpu__DOT__wb_dout;
-    vlSelf->top__DOT__cpu__DOT__ALUSRC2__DOT__D2 = vlSelf->top__DOT__cpu__DOT__wb_dout;
     vlSelf->top__DOT__cpu__DOT__WBSRC__DOT__Y = vlSelf->top__DOT__cpu__DOT__wb_dout;
     vlSelf->top__DOT__cpu__DOT__write_data = ((IData)(vlSelf->top__DOT__cpu__DOT__MEM_WB_pc_to_reg)
                                                ? vlSelf->top__DOT__cpu__DOT__MEM_WB_pc4
                                                : vlSelf->top__DOT__cpu__DOT__wb_dout);
-    vlSelf->top__DOT__cpu__DOT__alu_in_1 = ((2U & (IData)(vlSelf->top__DOT__cpu__DOT__foward_A))
-                                             ? ((1U 
-                                                 & (IData)(vlSelf->top__DOT__cpu__DOT__foward_A))
-                                                 ? 0U
-                                                 : vlSelf->top__DOT__cpu__DOT__wb_dout)
-                                             : ((1U 
-                                                 & (IData)(vlSelf->top__DOT__cpu__DOT__foward_A))
-                                                 ? vlSelf->top__DOT__cpu__DOT__EX_MEM_alu_out
-                                                 : vlSelf->top__DOT__cpu__DOT__ID_EX_rs1_data));
-    vlSelf->top__DOT__cpu__DOT__alu_src2_out = ((2U 
-                                                 & (IData)(vlSelf->top__DOT__cpu__DOT__foward_B))
-                                                 ? 
-                                                ((1U 
-                                                  & (IData)(vlSelf->top__DOT__cpu__DOT__foward_B))
-                                                  ? 0U
-                                                  : vlSelf->top__DOT__cpu__DOT__wb_dout)
-                                                 : 
-                                                ((1U 
-                                                  & (IData)(vlSelf->top__DOT__cpu__DOT__foward_B))
-                                                  ? vlSelf->top__DOT__cpu__DOT__EX_MEM_alu_out
-                                                  : vlSelf->top__DOT__cpu__DOT__ID_EX_rs2_data));
     vlSelf->is_halted = ((IData)(vlSelf->top__DOT__cpu__DOT__MEM_WB_is_ecall) 
                          & (0xaU == vlSelf->print_reg
                             [0x11U]));
@@ -932,6 +907,36 @@ VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
         = vlSelf->top__DOT__cpu__DOT__write_data;
     vlSelf->top__DOT__cpu__DOT__reg_file__DOT__rd_din 
         = vlSelf->top__DOT__cpu__DOT__write_data;
+    vlSelf->top__DOT__cpu__DOT__ALUSRC1__DOT__D2 = vlSelf->top__DOT__cpu__DOT__write_data;
+    vlSelf->top__DOT__cpu__DOT__ALUSRC2__DOT__D2 = vlSelf->top__DOT__cpu__DOT__write_data;
+    vlSelf->top__DOT__cpu__DOT__alu_in_1 = ((2U & (IData)(vlSelf->top__DOT__cpu__DOT__foward_A))
+                                             ? ((1U 
+                                                 & (IData)(vlSelf->top__DOT__cpu__DOT__foward_A))
+                                                 ? 0U
+                                                 : vlSelf->top__DOT__cpu__DOT__write_data)
+                                             : ((1U 
+                                                 & (IData)(vlSelf->top__DOT__cpu__DOT__foward_A))
+                                                 ? vlSelf->top__DOT__cpu__DOT__EX_MEM_alu_out
+                                                 : vlSelf->top__DOT__cpu__DOT__ID_EX_rs1_data));
+    vlSelf->top__DOT__cpu__DOT__alu_src2_out = ((2U 
+                                                 & (IData)(vlSelf->top__DOT__cpu__DOT__foward_B))
+                                                 ? 
+                                                ((1U 
+                                                  & (IData)(vlSelf->top__DOT__cpu__DOT__foward_B))
+                                                  ? 0U
+                                                  : vlSelf->top__DOT__cpu__DOT__write_data)
+                                                 : 
+                                                ((1U 
+                                                  & (IData)(vlSelf->top__DOT__cpu__DOT__foward_B))
+                                                  ? vlSelf->top__DOT__cpu__DOT__EX_MEM_alu_out
+                                                  : vlSelf->top__DOT__cpu__DOT__ID_EX_rs2_data));
+    vlSelf->top__DOT__is_halted = vlSelf->is_halted;
+    vlSelf->top__DOT__cpu__DOT__BTB__DOT__Y = vlSelf->top__DOT__cpu__DOT__pc_btb;
+    vlSelf->top__DOT__cpu__DOT__PCS1__DOT__D0 = vlSelf->top__DOT__cpu__DOT__pc_btb;
+    vlSelf->top__DOT__cpu__DOT__is_correct__DOT__D2 
+        = vlSelf->top__DOT__cpu__DOT__pc_btb;
+    vlSelf->top__DOT__cpu__DOT__control_signal__DOT__Y 
+        = vlSelf->top__DOT__cpu__DOT__control_output;
     vlSelf->top__DOT__cpu__DOT__ALUSRC1__DOT__Y = vlSelf->top__DOT__cpu__DOT__alu_in_1;
     vlSelf->top__DOT__cpu__DOT__alu__DOT__in_1 = vlSelf->top__DOT__cpu__DOT__alu_in_1;
     vlSelf->top__DOT__cpu__DOT__ALUSRC2__DOT__Y = vlSelf->top__DOT__cpu__DOT__alu_src2_out;
@@ -940,13 +945,7 @@ VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
     vlSelf->top__DOT__cpu__DOT__alu_in_2 = ((IData)(vlSelf->top__DOT__cpu__DOT__ID_EX_alu_src)
                                              ? vlSelf->top__DOT__cpu__DOT__ID_EX_imm
                                              : vlSelf->top__DOT__cpu__DOT__alu_src2_out);
-    vlSelf->top__DOT__is_halted = vlSelf->is_halted;
-    vlSelf->top__DOT__cpu__DOT__BTB__DOT__Y = vlSelf->top__DOT__cpu__DOT__pc_btb;
-    vlSelf->top__DOT__cpu__DOT__PCS1__DOT__D0 = vlSelf->top__DOT__cpu__DOT__pc_btb;
-    vlSelf->top__DOT__cpu__DOT__is_correct__DOT__D2 
-        = vlSelf->top__DOT__cpu__DOT__pc_btb;
-    vlSelf->top__DOT__cpu__DOT__control_signal__DOT__Y 
-        = vlSelf->top__DOT__cpu__DOT__control_output;
+    vlSelf->top__DOT__cpu__DOT__is_halted = vlSelf->top__DOT__is_halted;
     vlSelf->top__DOT__cpu__DOT__ALUSRC_IMM__DOT__Y 
         = vlSelf->top__DOT__cpu__DOT__alu_in_2;
     vlSelf->top__DOT__cpu__DOT__alu__DOT__in_2 = vlSelf->top__DOT__cpu__DOT__alu_in_2;
@@ -1017,42 +1016,73 @@ VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
                                                           >= vlSelf->top__DOT__cpu__DOT__alu_in_2)
                                                           ? 1U
                                                           : 0U))))));
-    vlSelf->top__DOT__cpu__DOT__is_halted = vlSelf->top__DOT__is_halted;
     vlSelf->top__DOT__cpu__DOT__PCS2__DOT__D1 = vlSelf->top__DOT__cpu__DOT__alu_result;
     vlSelf->top__DOT__cpu__DOT__alu__DOT__result = vlSelf->top__DOT__cpu__DOT__alu_result;
     vlSelf->top__DOT__cpu__DOT__alu__DOT__bcond = vlSelf->top__DOT__cpu__DOT__bcond;
     vlSelf->top__DOT__cpu__DOT__PCSrc1 = (((IData)(vlSelf->top__DOT__cpu__DOT__ID_EX_branch) 
                                            & (IData)(vlSelf->top__DOT__cpu__DOT__bcond)) 
                                           | (IData)(vlSelf->top__DOT__cpu__DOT__ID_EX_jal));
-    if (vlSelf->top__DOT__cpu__DOT__PCSrc1) {
-        vlSelf->top__DOT__cpu__DOT__PCS1__DOT__S = 1U;
-        vlSelf->top__DOT__cpu__DOT__pc_src1 = vlSelf->top__DOT__cpu__DOT__pc_addr;
-    } else {
-        vlSelf->top__DOT__cpu__DOT__PCS1__DOT__S = 0U;
-        vlSelf->top__DOT__cpu__DOT__pc_src1 = vlSelf->top__DOT__cpu__DOT__pc_btb;
-    }
+    vlSelf->top__DOT__cpu__DOT__PCS1__DOT__S = vlSelf->top__DOT__cpu__DOT__PCSrc1;
     vlSelf->top__DOT__cpu__DOT__taken = ((IData)(vlSelf->top__DOT__cpu__DOT__PCSrc1) 
                                          | (IData)(vlSelf->top__DOT__cpu__DOT__ID_EX_jalr));
+    vlSelf->top__DOT__cpu__DOT__pc_src1 = ((IData)(vlSelf->top__DOT__cpu__DOT__PCSrc1)
+                                            ? vlSelf->top__DOT__cpu__DOT__pc_addr
+                                            : vlSelf->top__DOT__cpu__DOT__pc_btb);
+    vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__taken 
+        = vlSelf->top__DOT__cpu__DOT__taken;
+    vlSelf->top__DOT__cpu__DOT__iscorrect__DOT__taken 
+        = vlSelf->top__DOT__cpu__DOT__taken;
     vlSelf->top__DOT__cpu__DOT__PCS1__DOT__Y = vlSelf->top__DOT__cpu__DOT__pc_src1;
     vlSelf->top__DOT__cpu__DOT__PCS2__DOT__D0 = vlSelf->top__DOT__cpu__DOT__pc_src1;
     vlSelf->top__DOT__cpu__DOT__pc_src2 = ((IData)(vlSelf->top__DOT__cpu__DOT__ID_EX_jalr)
                                             ? vlSelf->top__DOT__cpu__DOT__alu_result
                                             : vlSelf->top__DOT__cpu__DOT__pc_src1);
-    vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__taken 
-        = vlSelf->top__DOT__cpu__DOT__taken;
-    vlSelf->top__DOT__cpu__DOT__iscorrect__DOT__taken 
-        = vlSelf->top__DOT__cpu__DOT__taken;
-    __Vtableidx1 = (((IData)(vlSelf->top__DOT__cpu__DOT__taken) 
-                     << 1U) | (IData)(vlSelf->top__DOT__cpu__DOT__ID_EX_prediction));
-    vlSelf->top__DOT__cpu__DOT__PCSrc3 = Vtop__ConstPool__TABLE_h2804b875_0
-        [__Vtableidx1];
-    vlSelf->top__DOT__cpu__DOT__is_incorrect = Vtop__ConstPool__TABLE_hf584dc7c_0
-        [__Vtableidx1];
     vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__target_addr 
+        = vlSelf->top__DOT__cpu__DOT__pc_src2;
+    vlSelf->top__DOT__cpu__DOT__iscorrect__DOT__cu_pc 
         = vlSelf->top__DOT__cpu__DOT__pc_src2;
     vlSelf->top__DOT__cpu__DOT__PCS2__DOT__Y = vlSelf->top__DOT__cpu__DOT__pc_src2;
     vlSelf->top__DOT__cpu__DOT__is_correct__DOT__D0 
         = vlSelf->top__DOT__cpu__DOT__pc_src2;
+    vlSelf->top__DOT__cpu__DOT__is_incorrect = ((0U 
+                                                 != 
+                                                 (((IData)(vlSelf->top__DOT__cpu__DOT__ID_EX_prediction) 
+                                                   << 1U) 
+                                                  | (IData)(vlSelf->top__DOT__cpu__DOT__taken))) 
+                                                && ((1U 
+                                                     == 
+                                                     (((IData)(vlSelf->top__DOT__cpu__DOT__ID_EX_prediction) 
+                                                       << 1U) 
+                                                      | (IData)(vlSelf->top__DOT__cpu__DOT__taken))) 
+                                                    || ((2U 
+                                                         == 
+                                                         (((IData)(vlSelf->top__DOT__cpu__DOT__ID_EX_prediction) 
+                                                           << 1U) 
+                                                          | (IData)(vlSelf->top__DOT__cpu__DOT__taken))) 
+                                                        || (vlSelf->top__DOT__cpu__DOT__pc_src2 
+                                                            != vlSelf->top__DOT__cpu__DOT__IF_ID_pc))));
+    vlSelf->top__DOT__cpu__DOT__PCSrc3 = ((0U == (((IData)(vlSelf->top__DOT__cpu__DOT__ID_EX_prediction) 
+                                                   << 1U) 
+                                                  | (IData)(vlSelf->top__DOT__cpu__DOT__taken)))
+                                           ? 0U : (
+                                                   (1U 
+                                                    == 
+                                                    (((IData)(vlSelf->top__DOT__cpu__DOT__ID_EX_prediction) 
+                                                      << 1U) 
+                                                     | (IData)(vlSelf->top__DOT__cpu__DOT__taken)))
+                                                    ? 0U
+                                                    : 
+                                                   ((2U 
+                                                     == 
+                                                     (((IData)(vlSelf->top__DOT__cpu__DOT__ID_EX_prediction) 
+                                                       << 1U) 
+                                                      | (IData)(vlSelf->top__DOT__cpu__DOT__taken)))
+                                                     ? 1U
+                                                     : 
+                                                    ((vlSelf->top__DOT__cpu__DOT__pc_src2 
+                                                      == vlSelf->top__DOT__cpu__DOT__IF_ID_pc)
+                                                      ? 2U
+                                                      : 0U))));
     vlSelf->top__DOT__cpu__DOT__iscorrect__DOT__is_incorrect 
         = vlSelf->top__DOT__cpu__DOT__is_incorrect;
     vlSelf->top__DOT__cpu__DOT__iscorrect__DOT__pc_mux_flag 
@@ -1295,6 +1325,8 @@ VL_ATTR_COLD void Vtop___024root___ctor_var_reset(Vtop___024root* vlSelf) {
     vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__i = VL_RAND_RESET_I(32);
     vlSelf->top__DOT__cpu__DOT__iscorrect__DOT__taken = VL_RAND_RESET_I(1);
     vlSelf->top__DOT__cpu__DOT__iscorrect__DOT__prediction = VL_RAND_RESET_I(1);
+    vlSelf->top__DOT__cpu__DOT__iscorrect__DOT__cu_pc = VL_RAND_RESET_I(32);
+    vlSelf->top__DOT__cpu__DOT__iscorrect__DOT__pre_pc = VL_RAND_RESET_I(32);
     vlSelf->top__DOT__cpu__DOT__iscorrect__DOT__pc_mux_flag = VL_RAND_RESET_I(2);
     vlSelf->top__DOT__cpu__DOT__iscorrect__DOT__is_incorrect = VL_RAND_RESET_I(1);
     vlSelf->top__DOT__cpu__DOT__add4_PC__DOT__alu_in_1 = VL_RAND_RESET_I(32);

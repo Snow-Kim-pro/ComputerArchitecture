@@ -214,6 +214,8 @@ class alignas(VL_CACHE_LINE_BYTES) Vtop___024root final : public VerilatedModule
         IData/*31:0*/ top__DOT__cpu__DOT__branchpredictor__DOT__i;
     };
     struct {
+        IData/*31:0*/ top__DOT__cpu__DOT__iscorrect__DOT__cu_pc;
+        IData/*31:0*/ top__DOT__cpu__DOT__iscorrect__DOT__pre_pc;
         IData/*31:0*/ top__DOT__cpu__DOT__add4_PC__DOT__alu_in_1;
         IData/*31:0*/ top__DOT__cpu__DOT__add4_PC__DOT__alu_in_2;
         IData/*31:0*/ top__DOT__cpu__DOT__add4_PC__DOT__alu_result;
@@ -276,10 +278,10 @@ class alignas(VL_CACHE_LINE_BYTES) Vtop___024root final : public VerilatedModule
         VlUnpacked<IData/*31:0*/, 32> top__DOT__print_reg;
         VlUnpacked<IData/*31:0*/, 32> top__DOT__cpu__DOT__print_reg;
         VlUnpacked<IData/*31:0*/, 32> top__DOT__cpu__DOT__branchpredictor__DOT__btb_table;
-        VlUnpacked<IData/*24:0*/, 32> top__DOT__cpu__DOT__branchpredictor__DOT__tag_table;
-        VlUnpacked<CData/*1:0*/, 32> top__DOT__cpu__DOT__branchpredictor__DOT__pht;
     };
     struct {
+        VlUnpacked<IData/*24:0*/, 32> top__DOT__cpu__DOT__branchpredictor__DOT__tag_table;
+        VlUnpacked<CData/*1:0*/, 32> top__DOT__cpu__DOT__branchpredictor__DOT__pht;
         VlUnpacked<IData/*31:0*/, 1024> top__DOT__cpu__DOT__imem__DOT__mem;
         VlUnpacked<IData/*31:0*/, 32> top__DOT__cpu__DOT__reg_file__DOT__print_reg;
         VlUnpacked<IData/*31:0*/, 32> top__DOT__cpu__DOT__reg_file__DOT__rf;

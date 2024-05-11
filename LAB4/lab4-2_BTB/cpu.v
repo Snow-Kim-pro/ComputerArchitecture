@@ -125,6 +125,8 @@ module cpu(input reset,       // positive reset signal
   Is_correct iscorrect(
     .taken(taken),                 // input
     .prediction(ID_EX_prediction), // input
+    .cu_pc(pc_src2), //input, 분기해야할 pc값
+    .pre_pc(IF_ID_pc), //input, predictor가 예측한 pc값
     .pc_mux_flag(PCSrc3),          // output
     .is_incorrect(is_incorrect)    // output
   );
@@ -262,7 +264,7 @@ module cpu(input reset,       // positive reset signal
 
   // Update ID/EX pipeline registers here
   always @(posedge clk) begin
-    if (reset || is_incorrect) begin
+    if (reset || is_incorrect || pcwrite == 0) begin
       ID_EX_alu_op     <= 0;    
       ID_EX_alu_src    <= 0;   
       ID_EX_mem_write  <= 0; 
@@ -310,7 +312,7 @@ module cpu(input reset,       // positive reset signal
     .S (foward_A),       // input
     .D0(ID_EX_rs1_data), // input 
     .D1(EX_MEM_alu_out), // input
-    .D2(wb_dout),        // input 
+    .D2(write_data),        // input 수정
     .D3(32'b0),          // input
     .Y (alu_in_1)        // output
   );
@@ -319,7 +321,7 @@ module cpu(input reset,       // positive reset signal
     .S (foward_B),       // input
     .D0(ID_EX_rs2_data), // input 
     .D1(EX_MEM_alu_out), // input
-    .D2(wb_dout),        // input 
+    .D2(write_data),        // input 수정
     .D3(32'b0),          // input
     .Y (alu_src2_out)    // output
   );
