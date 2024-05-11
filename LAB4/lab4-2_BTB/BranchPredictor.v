@@ -30,25 +30,11 @@ module BranchPredictor #(parameter ENTRIES = 32)(
     always @(posedge clk) begin
         if (reset) begin
             for (i = 0; i < ENTRIES; i++) begin
-                btb_table[i] <= 0;
-                tag_table[i] <= 0;
-                pht[i] <= 2'b10;  // 초기값: weakly taken
+                btb_table[i] <= 0;  
+                tag_table[i] <= 0;                                              
+                pht[i] <= 2'b01;  // 초기값: weakly not taken
             end
-            hit <= 0;
-            predicted_target <= 0;
-            prediction <= 0;
         end else begin
-            // IF Stage : Control Flow에 대해 table 탐색
-            if (tag_table[index] == tag && pht[index] > 1) begin
-                hit <= 1;
-                prediction <= 1;
-                predicted_target <= btb_table[index];
-            end else begin
-                hit <= 0;
-                prediction <= 0;
-                predicted_target <= 0;
-            end
-
             // EX Stage : PHT update && (taken 유무에 따라) BTB, Tag table update
             if (valid) begin
                 if (taken) begin
@@ -58,6 +44,19 @@ module BranchPredictor #(parameter ENTRIES = 32)(
                 end else if (!taken) 
                     pht[exidx] <= (pht[exidx] > 0) ? pht[exidx] - 1 : pht[exidx];  // update PHT
             end
+        end
+    end
+
+    always @(*) begin
+        // IF Stage : Control Flow에 대해 table 탐색
+        if (tag_table[index] == tag && pht[index] > 1) begin
+            hit = 1;
+            prediction = 1;
+            predicted_target = btb_table[index];
+        end else begin
+            hit = 0;
+            prediction = 0;
+            predicted_target = 0;
         end
     end
 

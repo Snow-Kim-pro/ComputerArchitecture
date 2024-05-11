@@ -121,12 +121,6 @@ VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
         = vlSelf->top__DOT__cpu__DOT__curr_pc;
     vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__ex_addr 
         = vlSelf->top__DOT__cpu__DOT__ID_EX_pc;
-    vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__hit 
-        = vlSelf->top__DOT__cpu__DOT__hit;
-    vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__prediction 
-        = vlSelf->top__DOT__cpu__DOT__prediction;
-    vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__predicted_target 
-        = vlSelf->top__DOT__cpu__DOT__predicted_target;
     vlSelf->top__DOT__cpu__DOT__iscorrect__DOT__prediction 
         = vlSelf->top__DOT__cpu__DOT__ID_EX_prediction;
     vlSelf->top__DOT__cpu__DOT__add4_PC__DOT__alu_in_1 
@@ -135,8 +129,6 @@ VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
         = vlSelf->top__DOT__cpu__DOT__ID_EX_pc;
     vlSelf->top__DOT__cpu__DOT__addr_PC__DOT__alu_in_2 
         = vlSelf->top__DOT__cpu__DOT__ID_EX_imm;
-    vlSelf->top__DOT__cpu__DOT__BTB__DOT__S = vlSelf->top__DOT__cpu__DOT__hit;
-    vlSelf->top__DOT__cpu__DOT__BTB__DOT__D1 = vlSelf->top__DOT__cpu__DOT__predicted_target;
     vlSelf->top__DOT__cpu__DOT__PCS2__DOT__S = vlSelf->top__DOT__cpu__DOT__ID_EX_jalr;
     vlSelf->top__DOT__cpu__DOT__is_correct__DOT__D1 
         = vlSelf->top__DOT__cpu__DOT__ID_EX_pc4;
@@ -207,11 +199,6 @@ VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
     vlSelf->top__DOT__cpu__DOT__WBSRC__DOT__D1 = vlSelf->top__DOT__cpu__DOT__MEM_WB_mem_to_reg_src_1;
     vlSelf->top__DOT__cpu__DOT__imm_gen__DOT__opcode 
         = (0x7fU & vlSelf->top__DOT__cpu__DOT__IF_ID_inst);
-    vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__index 
-        = (0x1fU & (vlSelf->top__DOT__cpu__DOT__curr_pc 
-                    >> 2U));
-    vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag 
-        = (vlSelf->top__DOT__cpu__DOT__curr_pc >> 7U);
     vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__extag 
         = (vlSelf->top__DOT__cpu__DOT__ID_EX_pc >> 7U);
     vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__exidx 
@@ -261,6 +248,11 @@ VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
                                                   == (IData)(vlSelf->top__DOT__cpu__DOT__MEM_WB_rd))) 
                                               & (IData)(vlSelf->top__DOT__cpu__DOT__MEM_WB_reg_write))
                                               ? 2U : 0U));
+    vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__index 
+        = (0x1fU & (vlSelf->top__DOT__cpu__DOT__curr_pc 
+                    >> 2U));
+    vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag 
+        = (vlSelf->top__DOT__cpu__DOT__curr_pc >> 7U);
     vlSelf->top__DOT__cpu__DOT__foward_B = ((((0U != (IData)(vlSelf->top__DOT__cpu__DOT__ID_EX_rs2)) 
                                               & ((IData)(vlSelf->top__DOT__cpu__DOT__ID_EX_rs2) 
                                                  == (IData)(vlSelf->top__DOT__cpu__DOT__EX_MEM_rd))) 
@@ -592,9 +584,6 @@ VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
     vlSelf->top__DOT__cpu__DOT__add4_PC__DOT__alu_result 
         = vlSelf->top__DOT__cpu__DOT__pc_add4;
     vlSelf->top__DOT__cpu__DOT__BTB__DOT__D0 = vlSelf->top__DOT__cpu__DOT__pc_add4;
-    vlSelf->top__DOT__cpu__DOT__pc_btb = ((IData)(vlSelf->top__DOT__cpu__DOT__hit)
-                                           ? vlSelf->top__DOT__cpu__DOT__predicted_target
-                                           : vlSelf->top__DOT__cpu__DOT__pc_add4);
     __Vtableidx3 = ((((IData)(vlSelf->top__DOT__cpu__DOT__alu_ctrl_unit__DOT__sub_or_not)
                        ? 1U : 0U) << 5U) | (((IData)(vlSelf->top__DOT__cpu__DOT__alu_ctrl_unit__DOT__funct3) 
                                              << 2U) 
@@ -604,6 +593,21 @@ VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
     vlSelf->top__DOT__cpu__DOT__ALUSRC1__DOT__S = vlSelf->top__DOT__cpu__DOT__foward_A;
     vlSelf->top__DOT__cpu__DOT__forwarding_unit__DOT__mux_forward_A 
         = vlSelf->top__DOT__cpu__DOT__foward_A;
+    if (((vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table
+          [vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__index] 
+          == vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag) 
+         & (1U < vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht
+            [vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__index]))) {
+        vlSelf->top__DOT__cpu__DOT__prediction = 1U;
+        vlSelf->top__DOT__cpu__DOT__hit = 1U;
+        vlSelf->top__DOT__cpu__DOT__predicted_target 
+            = vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table
+            [vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__index];
+    } else {
+        vlSelf->top__DOT__cpu__DOT__prediction = 0U;
+        vlSelf->top__DOT__cpu__DOT__hit = 0U;
+        vlSelf->top__DOT__cpu__DOT__predicted_target = 0U;
+    }
     vlSelf->top__DOT__cpu__DOT__ALUSRC2__DOT__S = vlSelf->top__DOT__cpu__DOT__foward_B;
     vlSelf->top__DOT__cpu__DOT__forwarding_unit__DOT__mux_forward_B 
         = vlSelf->top__DOT__cpu__DOT__foward_B;
@@ -895,36 +899,35 @@ VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
     vlSelf->top__DOT__cpu__DOT__pc__DOT__pcwrite = vlSelf->top__DOT__cpu__DOT__pcwrite;
     vlSelf->top__DOT__cpu__DOT__hazard_detectoin_unit__DOT__pcwrite 
         = vlSelf->top__DOT__cpu__DOT__pcwrite;
-    if (vlSelf->top__DOT__cpu__DOT__control_mux) {
-        vlSelf->top__DOT__cpu__DOT__hazard_detectoin_unit__DOT__control_mux = 1U;
-        vlSelf->top__DOT__cpu__DOT__control_signal__DOT__S = 1U;
-        vlSelf->top__DOT__cpu__DOT__BTB__DOT__Y = vlSelf->top__DOT__cpu__DOT__pc_btb;
-        vlSelf->top__DOT__cpu__DOT__PCS1__DOT__D0 = vlSelf->top__DOT__cpu__DOT__pc_btb;
-        vlSelf->top__DOT__cpu__DOT__is_correct__DOT__D2 
-            = vlSelf->top__DOT__cpu__DOT__pc_btb;
-        vlSelf->top__DOT__cpu__DOT__alu_ctrl_unit__DOT__alu_control 
-            = vlSelf->top__DOT__cpu__DOT__alu_control;
-        vlSelf->top__DOT__cpu__DOT__alu__DOT__control 
-            = vlSelf->top__DOT__cpu__DOT__alu_control;
-        vlSelf->top__DOT__cpu__DOT__control_signal__DOT__D0 
-            = top__DOT__cpu__DOT____Vcellinp__control_signal__D0;
-        vlSelf->top__DOT__cpu__DOT__control_output = 0U;
+    vlSelf->top__DOT__cpu__DOT__hazard_detectoin_unit__DOT__control_mux 
+        = vlSelf->top__DOT__cpu__DOT__control_mux;
+    vlSelf->top__DOT__cpu__DOT__control_signal__DOT__S 
+        = vlSelf->top__DOT__cpu__DOT__control_mux;
+    vlSelf->top__DOT__cpu__DOT__alu_ctrl_unit__DOT__alu_control 
+        = vlSelf->top__DOT__cpu__DOT__alu_control;
+    vlSelf->top__DOT__cpu__DOT__alu__DOT__control = vlSelf->top__DOT__cpu__DOT__alu_control;
+    vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__prediction 
+        = vlSelf->top__DOT__cpu__DOT__prediction;
+    if (vlSelf->top__DOT__cpu__DOT__hit) {
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__hit = 1U;
+        vlSelf->top__DOT__cpu__DOT__BTB__DOT__S = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__predicted_target 
+            = vlSelf->top__DOT__cpu__DOT__predicted_target;
+        vlSelf->top__DOT__cpu__DOT__BTB__DOT__D1 = vlSelf->top__DOT__cpu__DOT__predicted_target;
+        vlSelf->top__DOT__cpu__DOT__pc_btb = vlSelf->top__DOT__cpu__DOT__predicted_target;
     } else {
-        vlSelf->top__DOT__cpu__DOT__hazard_detectoin_unit__DOT__control_mux = 0U;
-        vlSelf->top__DOT__cpu__DOT__control_signal__DOT__S = 0U;
-        vlSelf->top__DOT__cpu__DOT__BTB__DOT__Y = vlSelf->top__DOT__cpu__DOT__pc_btb;
-        vlSelf->top__DOT__cpu__DOT__PCS1__DOT__D0 = vlSelf->top__DOT__cpu__DOT__pc_btb;
-        vlSelf->top__DOT__cpu__DOT__is_correct__DOT__D2 
-            = vlSelf->top__DOT__cpu__DOT__pc_btb;
-        vlSelf->top__DOT__cpu__DOT__alu_ctrl_unit__DOT__alu_control 
-            = vlSelf->top__DOT__cpu__DOT__alu_control;
-        vlSelf->top__DOT__cpu__DOT__alu__DOT__control 
-            = vlSelf->top__DOT__cpu__DOT__alu_control;
-        vlSelf->top__DOT__cpu__DOT__control_signal__DOT__D0 
-            = top__DOT__cpu__DOT____Vcellinp__control_signal__D0;
-        vlSelf->top__DOT__cpu__DOT__control_output 
-            = top__DOT__cpu__DOT____Vcellinp__control_signal__D0;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__hit = 0U;
+        vlSelf->top__DOT__cpu__DOT__BTB__DOT__S = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__predicted_target 
+            = vlSelf->top__DOT__cpu__DOT__predicted_target;
+        vlSelf->top__DOT__cpu__DOT__BTB__DOT__D1 = vlSelf->top__DOT__cpu__DOT__predicted_target;
+        vlSelf->top__DOT__cpu__DOT__pc_btb = vlSelf->top__DOT__cpu__DOT__pc_add4;
     }
+    vlSelf->top__DOT__cpu__DOT__control_signal__DOT__D0 
+        = top__DOT__cpu__DOT____Vcellinp__control_signal__D0;
+    vlSelf->top__DOT__cpu__DOT__control_output = ((IData)(vlSelf->top__DOT__cpu__DOT__control_mux)
+                                                   ? 0U
+                                                   : (IData)(top__DOT__cpu__DOT____Vcellinp__control_signal__D0));
     vlSelf->top__DOT__cpu__DOT__Write_Data__DOT__Y 
         = vlSelf->top__DOT__cpu__DOT__write_data;
     vlSelf->top__DOT__cpu__DOT__reg_file__DOT__rd_din 
@@ -938,6 +941,10 @@ VL_ATTR_COLD void Vtop___024root___stl_sequent__TOP__0(Vtop___024root* vlSelf) {
                                              ? vlSelf->top__DOT__cpu__DOT__ID_EX_imm
                                              : vlSelf->top__DOT__cpu__DOT__alu_src2_out);
     vlSelf->top__DOT__is_halted = vlSelf->is_halted;
+    vlSelf->top__DOT__cpu__DOT__BTB__DOT__Y = vlSelf->top__DOT__cpu__DOT__pc_btb;
+    vlSelf->top__DOT__cpu__DOT__PCS1__DOT__D0 = vlSelf->top__DOT__cpu__DOT__pc_btb;
+    vlSelf->top__DOT__cpu__DOT__is_correct__DOT__D2 
+        = vlSelf->top__DOT__cpu__DOT__pc_btb;
     vlSelf->top__DOT__cpu__DOT__control_signal__DOT__Y 
         = vlSelf->top__DOT__cpu__DOT__control_output;
     vlSelf->top__DOT__cpu__DOT__ALUSRC_IMM__DOT__Y 

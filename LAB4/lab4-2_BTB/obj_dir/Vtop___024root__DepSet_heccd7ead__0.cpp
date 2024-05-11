@@ -90,8 +90,6 @@ VL_INLINE_OPT void Vtop___024root___nba_sequent__TOP__0(Vtop___024root* vlSelf) 
     __Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__tag_table__v32 = 0;
     CData/*0:0*/ __Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v0;
     __Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v0 = 0;
-    CData/*0:0*/ __Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v1;
-    __Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v1 = 0;
     CData/*4:0*/ __Vdlyvdim0__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v32;
     __Vdlyvdim0__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v32 = 0;
     CData/*1:0*/ __Vdlyvval__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v32;
@@ -112,15 +110,14 @@ VL_INLINE_OPT void Vtop___024root___nba_sequent__TOP__0(Vtop___024root* vlSelf) 
     __Vdlyvset__top__DOT__cpu__DOT__dmem__DOT__mem__v0 = 0;
     VlWide<7>/*223:0*/ __Vtemp_2;
     // Body
-    __Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__tag_table__v0 = 0U;
-    __Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__tag_table__v32 = 0U;
     __Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__btb_table__v0 = 0U;
     __Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__btb_table__v32 = 0U;
+    __Vdlyvset__top__DOT__cpu__DOT__dmem__DOT__mem__v0 = 0U;
+    __Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__tag_table__v0 = 0U;
+    __Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__tag_table__v32 = 0U;
     __Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v0 = 0U;
-    __Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v1 = 0U;
     __Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v32 = 0U;
     __Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v33 = 0U;
-    __Vdlyvset__top__DOT__cpu__DOT__dmem__DOT__mem__v0 = 0U;
     if (vlSelf->reset) {
         vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__i = 1U;
         vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__i = 2U;
@@ -165,11 +162,11 @@ VL_INLINE_OPT void Vtop___024root___nba_sequent__TOP__0(Vtop___024root* vlSelf) 
         }
         __Vtemp_2[0U] = 0x2e747874U;
         __Vtemp_2[1U] = 0x5f6d656dU;
-        __Vtemp_2[2U] = 0x61736963U;
-        __Vtemp_2[3U] = 0x74622f62U;
-        __Vtemp_2[4U] = 0x656e745fU;
-        __Vtemp_2[5U] = 0x73747564U;
-        __Vtemp_2[6U] = 0x2e2fU;
+        __Vtemp_2[2U] = 0x6c6f6f70U;
+        __Vtemp_2[3U] = 0x5f74622fU;
+        __Vtemp_2[4U] = 0x64656e74U;
+        __Vtemp_2[5U] = 0x2f737475U;
+        __Vtemp_2[6U] = 0x2eU;
         VL_READMEM_N(true, 32, 1024, 0, VL_CVT_PACK_STR_NW(7, __Vtemp_2)
                      ,  &(vlSelf->top__DOT__cpu__DOT__imem__DOT__mem)
                      , 0, ~0ULL);
@@ -208,19 +205,6 @@ VL_INLINE_OPT void Vtop___024root___nba_sequent__TOP__0(Vtop___024root* vlSelf) 
                                                    (1U 
                                                     & (~ (IData)(vlSelf->reset))) 
                                                    && (IData)(vlSelf->top__DOT__cpu__DOT__EX_MEM_is_ecall));
-    vlSelf->top__DOT__cpu__DOT__MEM_WB_pc_to_reg = 
-        ((1U & (~ (IData)(vlSelf->reset))) && (IData)(vlSelf->top__DOT__cpu__DOT__EX_MEM_pc_to_reg));
-    vlSelf->top__DOT__cpu__DOT__EX_MEM_mem_read = (
-                                                   (1U 
-                                                    & (~ (IData)(vlSelf->reset))) 
-                                                   && (IData)(vlSelf->top__DOT__cpu__DOT__ID_EX_mem_read));
-    vlSelf->top__DOT__cpu__DOT__ID_EX_alu_src = ((1U 
-                                                  & (~ 
-                                                     ((IData)(vlSelf->reset) 
-                                                      | (IData)(vlSelf->top__DOT__cpu__DOT__is_incorrect)))) 
-                                                 && (1U 
-                                                     & ((IData)(vlSelf->top__DOT__cpu__DOT__control_output) 
-                                                        >> 4U)));
     vlSelf->top__DOT__cpu__DOT__ID_EX_prediction = 
         ((1U & (~ ((IData)(vlSelf->reset) | (IData)(vlSelf->top__DOT__cpu__DOT__is_incorrect)))) 
          && (IData)(vlSelf->top__DOT__cpu__DOT__IF_ID_prediction));
@@ -269,32 +253,28 @@ VL_INLINE_OPT void Vtop___024root___nba_sequent__TOP__0(Vtop___024root* vlSelf) 
             vlSelf->top__DOT__cpu__DOT__dmem__DOT__i 
                 = ((IData)(1U) + vlSelf->top__DOT__cpu__DOT__dmem__DOT__i);
         }
-        __Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__tag_table__v0 = 1U;
         __Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__btb_table__v0 = 1U;
+        __Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__tag_table__v0 = 1U;
+        __Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v0 = 1U;
         vlSelf->top__DOT__cpu__DOT__MEM_WB_mem_to_reg_src_1 = 0U;
         vlSelf->top__DOT__cpu__DOT__MEM_WB_pc4 = 0U;
         vlSelf->top__DOT__cpu__DOT__MEM_WB_mem_to_reg_src_0 = 0U;
         vlSelf->top__DOT__cpu__DOT__EX_MEM_dmem_data = 0U;
         vlSelf->top__DOT__cpu__DOT__EX_MEM_pc4 = 0U;
         vlSelf->top__DOT__cpu__DOT__EX_MEM_alu_out = 0U;
-        __Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v0 = 1U;
-        vlSelf->top__DOT__cpu__DOT__hit = 0U;
-        vlSelf->top__DOT__cpu__DOT__predicted_target = 0U;
-        vlSelf->top__DOT__cpu__DOT__prediction = 0U;
-        __Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v1 = 1U;
         vlSelf->top__DOT__cpu__DOT__curr_pc = 0U;
     } else {
         if (vlSelf->top__DOT__cpu__DOT__valid) {
             if (vlSelf->top__DOT__cpu__DOT__taken) {
-                __Vdlyvval__top__DOT__cpu__DOT__branchpredictor__DOT__tag_table__v32 
-                    = vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__extag;
-                __Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__tag_table__v32 = 1U;
-                __Vdlyvdim0__top__DOT__cpu__DOT__branchpredictor__DOT__tag_table__v32 
-                    = vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__exidx;
                 __Vdlyvval__top__DOT__cpu__DOT__branchpredictor__DOT__btb_table__v32 
                     = vlSelf->top__DOT__cpu__DOT__pc_src2;
                 __Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__btb_table__v32 = 1U;
                 __Vdlyvdim0__top__DOT__cpu__DOT__branchpredictor__DOT__btb_table__v32 
+                    = vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__exidx;
+                __Vdlyvval__top__DOT__cpu__DOT__branchpredictor__DOT__tag_table__v32 
+                    = vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__extag;
+                __Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__tag_table__v32 = 1U;
+                __Vdlyvdim0__top__DOT__cpu__DOT__branchpredictor__DOT__tag_table__v32 
                     = vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__exidx;
                 __Vdlyvval__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v32 
                     = (3U & ((3U > vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht
@@ -329,21 +309,6 @@ VL_INLINE_OPT void Vtop___024root___nba_sequent__TOP__0(Vtop___024root* vlSelf) 
         vlSelf->top__DOT__cpu__DOT__EX_MEM_pc4 = vlSelf->top__DOT__cpu__DOT__ID_EX_pc4;
         vlSelf->top__DOT__cpu__DOT__EX_MEM_alu_out 
             = vlSelf->top__DOT__cpu__DOT__alu_result;
-        if (((vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table
-              [vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__index] 
-              == vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag) 
-             & (1U < vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht
-                [vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__index]))) {
-            vlSelf->top__DOT__cpu__DOT__hit = 1U;
-            vlSelf->top__DOT__cpu__DOT__prediction = 1U;
-            vlSelf->top__DOT__cpu__DOT__predicted_target 
-                = vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table
-                [vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__index];
-        } else {
-            vlSelf->top__DOT__cpu__DOT__hit = 0U;
-            vlSelf->top__DOT__cpu__DOT__prediction = 0U;
-            vlSelf->top__DOT__cpu__DOT__predicted_target = 0U;
-        }
         if (vlSelf->top__DOT__cpu__DOT__pcwrite) {
             vlSelf->top__DOT__cpu__DOT__curr_pc = vlSelf->top__DOT__cpu__DOT__next_pc;
         }
@@ -357,20 +322,156 @@ VL_INLINE_OPT void Vtop___024root___nba_sequent__TOP__0(Vtop___024root* vlSelf) 
             vlSelf->top__DOT__cpu__DOT__IF_ID_pc4 = vlSelf->top__DOT__cpu__DOT__pc_add4;
         }
     }
+    vlSelf->top__DOT__cpu__DOT__MEM_WB_pc_to_reg = 
+        ((1U & (~ (IData)(vlSelf->reset))) && (IData)(vlSelf->top__DOT__cpu__DOT__EX_MEM_pc_to_reg));
+    vlSelf->top__DOT__cpu__DOT__EX_MEM_mem_read = (
+                                                   (1U 
+                                                    & (~ (IData)(vlSelf->reset))) 
+                                                   && (IData)(vlSelf->top__DOT__cpu__DOT__ID_EX_mem_read));
+    vlSelf->top__DOT__cpu__DOT__ID_EX_alu_src = ((1U 
+                                                  & (~ 
+                                                     ((IData)(vlSelf->reset) 
+                                                      | (IData)(vlSelf->top__DOT__cpu__DOT__is_incorrect)))) 
+                                                 && (1U 
+                                                     & ((IData)(vlSelf->top__DOT__cpu__DOT__control_output) 
+                                                        >> 4U)));
     vlSelf->top__DOT__cpu__DOT__MEM_WB_mem_to_reg = 
         ((1U & (~ (IData)(vlSelf->reset))) && (IData)(vlSelf->top__DOT__cpu__DOT__EX_MEM_mem_to_reg));
+    if (__Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__btb_table__v0) {
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[1U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[2U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[3U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[4U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[5U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[6U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[7U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[8U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[9U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0xaU] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0xbU] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0xcU] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0xdU] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0xeU] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0xfU] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x10U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x11U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x12U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x13U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x14U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x15U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x16U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x17U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x18U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x19U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x1aU] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x1bU] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x1cU] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x1dU] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x1eU] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x1fU] = 0U;
+    }
+    if (__Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__btb_table__v32) {
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[__Vdlyvdim0__top__DOT__cpu__DOT__branchpredictor__DOT__btb_table__v32] 
+            = __Vdlyvval__top__DOT__cpu__DOT__branchpredictor__DOT__btb_table__v32;
+    }
     if (__Vdlyvset__top__DOT__cpu__DOT__dmem__DOT__mem__v0) {
         vlSelf->top__DOT__cpu__DOT__dmem__DOT__mem[__Vdlyvdim0__top__DOT__cpu__DOT__dmem__DOT__mem__v0] 
             = __Vdlyvval__top__DOT__cpu__DOT__dmem__DOT__mem__v0;
     }
+    if (__Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__tag_table__v0) {
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[1U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[2U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[3U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[4U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[5U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[6U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[7U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[8U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[9U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0xaU] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0xbU] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0xcU] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0xdU] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0xeU] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0xfU] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x10U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x11U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x12U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x13U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x14U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x15U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x16U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x17U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x18U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x19U] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x1aU] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x1bU] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x1cU] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x1dU] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x1eU] = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x1fU] = 0U;
+    }
+    if (__Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__tag_table__v32) {
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[__Vdlyvdim0__top__DOT__cpu__DOT__branchpredictor__DOT__tag_table__v32] 
+            = __Vdlyvval__top__DOT__cpu__DOT__branchpredictor__DOT__tag_table__v32;
+    }
+    if (__Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v0) {
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0U] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[1U] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[2U] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[3U] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[4U] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[5U] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[6U] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[7U] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[8U] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[9U] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0xaU] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0xbU] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0xcU] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0xdU] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0xeU] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0xfU] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x10U] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x11U] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x12U] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x13U] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x14U] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x15U] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x16U] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x17U] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x18U] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x19U] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x1aU] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x1bU] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x1cU] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x1dU] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x1eU] = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x1fU] = 1U;
+    }
+    if (__Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v32) {
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[__Vdlyvdim0__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v32] 
+            = __Vdlyvval__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v32;
+    }
+    if (__Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v33) {
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[__Vdlyvdim0__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v33] 
+            = __Vdlyvval__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v33;
+    }
     vlSelf->top__DOT__cpu__DOT__EX_MEM_mem_write = 
         ((1U & (~ (IData)(vlSelf->reset))) && (IData)(vlSelf->top__DOT__cpu__DOT__ID_EX_mem_write));
     vlSelf->top__DOT__cpu__DOT__PCS2__DOT__S = vlSelf->top__DOT__cpu__DOT__ID_EX_jalr;
+    vlSelf->top__DOT__cpu__DOT__valid = ((IData)(vlSelf->top__DOT__cpu__DOT__ID_EX_branch) 
+                                         | ((IData)(vlSelf->top__DOT__cpu__DOT__ID_EX_jal) 
+                                            | (IData)(vlSelf->top__DOT__cpu__DOT__ID_EX_jalr)));
     vlSelf->top__DOT__cpu__DOT__EX_MEM_is_ecall = (
                                                    (1U 
                                                     & (~ (IData)(vlSelf->reset))) 
                                                    && (IData)(vlSelf->top__DOT__cpu__DOT__ID_EX_is_ecall));
     vlSelf->top__DOT__cpu__DOT__ALUSRC1__DOT__D0 = vlSelf->top__DOT__cpu__DOT__ID_EX_rs1_data;
+    vlSelf->top__DOT__cpu__DOT__iscorrect__DOT__prediction 
+        = vlSelf->top__DOT__cpu__DOT__ID_EX_prediction;
     vlSelf->top__DOT__cpu__DOT__Write_Data__DOT__S 
         = vlSelf->top__DOT__cpu__DOT__MEM_WB_pc_to_reg;
     vlSelf->top__DOT__cpu__DOT__EX_MEM_pc_to_reg = 
@@ -396,16 +497,6 @@ VL_INLINE_OPT void Vtop___024root___nba_sequent__TOP__0(Vtop___024root* vlSelf) 
     vlSelf->top__DOT__cpu__DOT__WBSRC__DOT__D1 = vlSelf->top__DOT__cpu__DOT__MEM_WB_mem_to_reg_src_1;
     vlSelf->top__DOT__cpu__DOT__Write_Data__DOT__D1 
         = vlSelf->top__DOT__cpu__DOT__MEM_WB_pc4;
-    vlSelf->top__DOT__cpu__DOT__iscorrect__DOT__prediction 
-        = vlSelf->top__DOT__cpu__DOT__ID_EX_prediction;
-    vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__ex_addr 
-        = vlSelf->top__DOT__cpu__DOT__ID_EX_pc;
-    vlSelf->top__DOT__cpu__DOT__addr_PC__DOT__alu_in_1 
-        = vlSelf->top__DOT__cpu__DOT__ID_EX_pc;
-    vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__extag 
-        = (vlSelf->top__DOT__cpu__DOT__ID_EX_pc >> 7U);
-    vlSelf->top__DOT__cpu__DOT__pc_addr = (vlSelf->top__DOT__cpu__DOT__ID_EX_imm 
-                                           + vlSelf->top__DOT__cpu__DOT__ID_EX_pc);
     vlSelf->top__DOT__cpu__DOT__WBSRC__DOT__S = vlSelf->top__DOT__cpu__DOT__MEM_WB_mem_to_reg;
     vlSelf->top__DOT__cpu__DOT__EX_MEM_mem_to_reg = 
         ((1U & (~ (IData)(vlSelf->reset))) && (IData)(vlSelf->top__DOT__cpu__DOT__ID_EX_mem_to_reg));
@@ -413,6 +504,17 @@ VL_INLINE_OPT void Vtop___024root___nba_sequent__TOP__0(Vtop___024root* vlSelf) 
     vlSelf->top__DOT__cpu__DOT__wb_dout = ((IData)(vlSelf->top__DOT__cpu__DOT__MEM_WB_mem_to_reg)
                                             ? vlSelf->top__DOT__cpu__DOT__MEM_WB_mem_to_reg_src_1
                                             : vlSelf->top__DOT__cpu__DOT__MEM_WB_mem_to_reg_src_0);
+    vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__ex_addr 
+        = vlSelf->top__DOT__cpu__DOT__ID_EX_pc;
+    vlSelf->top__DOT__cpu__DOT__addr_PC__DOT__alu_in_1 
+        = vlSelf->top__DOT__cpu__DOT__ID_EX_pc;
+    vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__extag 
+        = (vlSelf->top__DOT__cpu__DOT__ID_EX_pc >> 7U);
+    vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__exidx 
+        = (0x1fU & (vlSelf->top__DOT__cpu__DOT__ID_EX_pc 
+                    >> 2U));
+    vlSelf->top__DOT__cpu__DOT__pc_addr = (vlSelf->top__DOT__cpu__DOT__ID_EX_imm 
+                                           + vlSelf->top__DOT__cpu__DOT__ID_EX_pc);
     vlSelf->top__DOT__cpu__DOT__forwarding_unit__DOT__rs1 
         = vlSelf->top__DOT__cpu__DOT__ID_EX_rs1;
     vlSelf->top__DOT__cpu__DOT__forwarding_unit__DOT__rs2 
@@ -424,14 +526,16 @@ VL_INLINE_OPT void Vtop___024root___nba_sequent__TOP__0(Vtop___024root* vlSelf) 
     vlSelf->top__DOT__cpu__DOT__alu_ctrl_unit__DOT__sub_or_not 
         = (1U & ((IData)(vlSelf->top__DOT__cpu__DOT__ID_EX_ALU_ctrl_unit_input) 
                  >> 3U));
-    vlSelf->top__DOT__cpu__DOT__addr_PC__DOT__alu_result 
-        = vlSelf->top__DOT__cpu__DOT__pc_addr;
-    vlSelf->top__DOT__cpu__DOT__PCS1__DOT__D1 = vlSelf->top__DOT__cpu__DOT__pc_addr;
+    vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__valid 
+        = vlSelf->top__DOT__cpu__DOT__valid;
     vlSelf->top__DOT__cpu__DOT__Write_Data__DOT__D0 
         = vlSelf->top__DOT__cpu__DOT__wb_dout;
     vlSelf->top__DOT__cpu__DOT__ALUSRC1__DOT__D2 = vlSelf->top__DOT__cpu__DOT__wb_dout;
     vlSelf->top__DOT__cpu__DOT__ALUSRC2__DOT__D2 = vlSelf->top__DOT__cpu__DOT__wb_dout;
     vlSelf->top__DOT__cpu__DOT__WBSRC__DOT__Y = vlSelf->top__DOT__cpu__DOT__wb_dout;
+    vlSelf->top__DOT__cpu__DOT__addr_PC__DOT__alu_result 
+        = vlSelf->top__DOT__cpu__DOT__pc_addr;
+    vlSelf->top__DOT__cpu__DOT__PCS1__DOT__D1 = vlSelf->top__DOT__cpu__DOT__pc_addr;
     __Vtableidx3 = ((((IData)(vlSelf->top__DOT__cpu__DOT__alu_ctrl_unit__DOT__sub_or_not)
                        ? 1U : 0U) << 5U) | (((IData)(vlSelf->top__DOT__cpu__DOT__alu_ctrl_unit__DOT__funct3) 
                                              << 2U) 
@@ -477,132 +581,6 @@ VL_INLINE_OPT void Vtop___024root___nba_sequent__TOP__0(Vtop___024root* vlSelf) 
     vlSelf->top__DOT__cpu__DOT__alu_ctrl_unit__DOT__alu_control 
         = vlSelf->top__DOT__cpu__DOT__alu_control;
     vlSelf->top__DOT__cpu__DOT__alu__DOT__control = vlSelf->top__DOT__cpu__DOT__alu_control;
-    vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__exidx 
-        = (0x1fU & (vlSelf->top__DOT__cpu__DOT__ID_EX_pc 
-                    >> 2U));
-    if (__Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__tag_table__v0) {
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[1U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[2U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[3U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[4U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[5U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[6U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[7U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[8U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[9U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0xaU] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0xbU] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0xcU] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0xdU] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0xeU] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0xfU] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x10U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x11U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x12U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x13U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x14U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x15U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x16U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x17U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x18U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x19U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x1aU] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x1bU] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x1cU] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x1dU] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x1eU] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[0x1fU] = 0U;
-    }
-    if (__Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__tag_table__v32) {
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table[__Vdlyvdim0__top__DOT__cpu__DOT__branchpredictor__DOT__tag_table__v32] 
-            = __Vdlyvval__top__DOT__cpu__DOT__branchpredictor__DOT__tag_table__v32;
-    }
-    if (__Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__btb_table__v0) {
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[1U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[2U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[3U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[4U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[5U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[6U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[7U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[8U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[9U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0xaU] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0xbU] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0xcU] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0xdU] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0xeU] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0xfU] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x10U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x11U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x12U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x13U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x14U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x15U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x16U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x17U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x18U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x19U] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x1aU] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x1bU] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x1cU] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x1dU] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x1eU] = 0U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[0x1fU] = 0U;
-    }
-    if (__Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__btb_table__v32) {
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table[__Vdlyvdim0__top__DOT__cpu__DOT__branchpredictor__DOT__btb_table__v32] 
-            = __Vdlyvval__top__DOT__cpu__DOT__branchpredictor__DOT__btb_table__v32;
-    }
-    vlSelf->top__DOT__cpu__DOT__valid = ((IData)(vlSelf->top__DOT__cpu__DOT__ID_EX_branch) 
-                                         | ((IData)(vlSelf->top__DOT__cpu__DOT__ID_EX_jal) 
-                                            | (IData)(vlSelf->top__DOT__cpu__DOT__ID_EX_jalr)));
-    if (__Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v0) {
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0U] = 2U;
-    }
-    if (__Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v1) {
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[1U] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[2U] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[3U] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[4U] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[5U] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[6U] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[7U] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[8U] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[9U] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0xaU] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0xbU] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0xcU] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0xdU] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0xeU] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0xfU] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x10U] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x11U] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x12U] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x13U] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x14U] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x15U] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x16U] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x17U] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x18U] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x19U] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x1aU] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x1bU] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x1cU] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x1dU] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x1eU] = 2U;
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[0x1fU] = 2U;
-    }
-    if (__Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v32) {
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[__Vdlyvdim0__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v32] 
-            = __Vdlyvval__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v32;
-    }
-    if (__Vdlyvset__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v33) {
-        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht[__Vdlyvdim0__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v33] 
-            = __Vdlyvval__top__DOT__cpu__DOT__branchpredictor__DOT__pht__v33;
-    }
     vlSelf->top__DOT__cpu__DOT__mem_dout = ((IData)(vlSelf->top__DOT__cpu__DOT__EX_MEM_mem_read)
                                              ? vlSelf->top__DOT__cpu__DOT__dmem__DOT__mem
                                             [(0x3fffU 
@@ -610,38 +588,57 @@ VL_INLINE_OPT void Vtop___024root___nba_sequent__TOP__0(Vtop___024root* vlSelf) 
                                              : 0U);
     vlSelf->top__DOT__cpu__DOT__is_correct__DOT__D1 
         = vlSelf->top__DOT__cpu__DOT__ID_EX_pc4;
-    vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__prediction 
-        = vlSelf->top__DOT__cpu__DOT__prediction;
-    vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__valid 
-        = vlSelf->top__DOT__cpu__DOT__valid;
-    vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__hit 
-        = vlSelf->top__DOT__cpu__DOT__hit;
-    vlSelf->top__DOT__cpu__DOT__BTB__DOT__S = vlSelf->top__DOT__cpu__DOT__hit;
-    vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__predicted_target 
-        = vlSelf->top__DOT__cpu__DOT__predicted_target;
-    vlSelf->top__DOT__cpu__DOT__BTB__DOT__D1 = vlSelf->top__DOT__cpu__DOT__predicted_target;
+    vlSelf->top__DOT__cpu__DOT__dmem__DOT__dout = vlSelf->top__DOT__cpu__DOT__mem_dout;
     vlSelf->top__DOT__cpu__DOT__pc__DOT__curr_pc = vlSelf->top__DOT__cpu__DOT__curr_pc;
     vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pc_addr 
         = vlSelf->top__DOT__cpu__DOT__curr_pc;
     vlSelf->top__DOT__cpu__DOT__add4_PC__DOT__alu_in_1 
         = vlSelf->top__DOT__cpu__DOT__curr_pc;
     vlSelf->top__DOT__cpu__DOT__imem__DOT__addr = vlSelf->top__DOT__cpu__DOT__curr_pc;
+    vlSelf->top__DOT__cpu__DOT__imem__DOT__imem_addr 
+        = VL_SHIFTR_III(32,32,32, vlSelf->top__DOT__cpu__DOT__curr_pc, 2U);
     vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__index 
         = (0x1fU & (vlSelf->top__DOT__cpu__DOT__curr_pc 
                     >> 2U));
     vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag 
         = (vlSelf->top__DOT__cpu__DOT__curr_pc >> 7U);
-    vlSelf->top__DOT__cpu__DOT__imem__DOT__imem_addr 
-        = VL_SHIFTR_III(32,32,32, vlSelf->top__DOT__cpu__DOT__curr_pc, 2U);
-    vlSelf->top__DOT__cpu__DOT__dmem__DOT__dout = vlSelf->top__DOT__cpu__DOT__mem_dout;
     vlSelf->top__DOT__cpu__DOT__pc_add4 = ((IData)(4U) 
                                            + vlSelf->top__DOT__cpu__DOT__curr_pc);
+    if (((vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag_table
+          [vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__index] 
+          == vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__tag) 
+         & (1U < vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__pht
+            [vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__index]))) {
+        vlSelf->top__DOT__cpu__DOT__prediction = 1U;
+        vlSelf->top__DOT__cpu__DOT__hit = 1U;
+        vlSelf->top__DOT__cpu__DOT__predicted_target 
+            = vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__btb_table
+            [vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__index];
+    } else {
+        vlSelf->top__DOT__cpu__DOT__prediction = 0U;
+        vlSelf->top__DOT__cpu__DOT__hit = 0U;
+        vlSelf->top__DOT__cpu__DOT__predicted_target = 0U;
+    }
     vlSelf->top__DOT__cpu__DOT__add4_PC__DOT__alu_result 
         = vlSelf->top__DOT__cpu__DOT__pc_add4;
     vlSelf->top__DOT__cpu__DOT__BTB__DOT__D0 = vlSelf->top__DOT__cpu__DOT__pc_add4;
-    vlSelf->top__DOT__cpu__DOT__pc_btb = ((IData)(vlSelf->top__DOT__cpu__DOT__hit)
-                                           ? vlSelf->top__DOT__cpu__DOT__predicted_target
-                                           : vlSelf->top__DOT__cpu__DOT__pc_add4);
+    vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__prediction 
+        = vlSelf->top__DOT__cpu__DOT__prediction;
+    if (vlSelf->top__DOT__cpu__DOT__hit) {
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__hit = 1U;
+        vlSelf->top__DOT__cpu__DOT__BTB__DOT__S = 1U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__predicted_target 
+            = vlSelf->top__DOT__cpu__DOT__predicted_target;
+        vlSelf->top__DOT__cpu__DOT__BTB__DOT__D1 = vlSelf->top__DOT__cpu__DOT__predicted_target;
+        vlSelf->top__DOT__cpu__DOT__pc_btb = vlSelf->top__DOT__cpu__DOT__predicted_target;
+    } else {
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__hit = 0U;
+        vlSelf->top__DOT__cpu__DOT__BTB__DOT__S = 0U;
+        vlSelf->top__DOT__cpu__DOT__branchpredictor__DOT__predicted_target 
+            = vlSelf->top__DOT__cpu__DOT__predicted_target;
+        vlSelf->top__DOT__cpu__DOT__BTB__DOT__D1 = vlSelf->top__DOT__cpu__DOT__predicted_target;
+        vlSelf->top__DOT__cpu__DOT__pc_btb = vlSelf->top__DOT__cpu__DOT__pc_add4;
+    }
     vlSelf->top__DOT__cpu__DOT__BTB__DOT__Y = vlSelf->top__DOT__cpu__DOT__pc_btb;
     vlSelf->top__DOT__cpu__DOT__PCS1__DOT__D0 = vlSelf->top__DOT__cpu__DOT__pc_btb;
     vlSelf->top__DOT__cpu__DOT__is_correct__DOT__D2 
