@@ -113,6 +113,8 @@ module cpu(input reset,       // positive reset signal
     .clk(clk),               // input
     .reset(reset),           // input
     .pc_addr(curr_pc),       // input
+    .pcwrite(pcwrite),
+    .is_incorrect(is_incorrect),
     .valid(valid),           // input
     .taken(taken),           // input
     .ex_addr(ID_EX_pc),      // input
