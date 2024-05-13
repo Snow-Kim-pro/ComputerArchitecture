@@ -113,8 +113,6 @@ module cpu(input reset,       // positive reset signal
     .clk(clk),               // input
     .reset(reset),           // input
     .pc_addr(curr_pc),       // input
-    .pcwrite(pcwrite),
-    .is_incorrect(is_incorrect),
     .valid(valid),           // input
     .taken(taken),           // input
     .ex_addr(ID_EX_pc),      // input
@@ -127,8 +125,8 @@ module cpu(input reset,       // positive reset signal
   Is_correct iscorrect(
     .taken(taken),                 // input
     .prediction(ID_EX_prediction), // input
-    .cu_pc(pc_src2), //input, 분기해야할 pc값
-    .pre_pc(IF_ID_pc), //input, predictor가 예측한 pc값
+    .cu_pc(pc_src2),               // input, 분기해야할 pc값
+    .pre_pc(IF_ID_pc),             // input, predictor가 예측한 pc값
     .pc_mux_flag(PCSrc3),          // output
     .is_incorrect(is_incorrect)    // output
   );
