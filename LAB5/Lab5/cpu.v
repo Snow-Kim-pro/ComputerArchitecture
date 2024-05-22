@@ -386,17 +386,17 @@ module cpu(input reset,                   // positive reset signal
 
   // ---------- Data Memory ----------
   Cache cache(
-    .reset (reset), // input
-    .clk (clk), // input
+    .reset (reset),            // input
+    .clk (clk),                // input
     .is_input_valid(), // input
-    .addr (), // input
-    .mem_rw(), // input
-    .din (), // input
+    .addr (EX_MEM_alu_out),    // input
+    .mem_rw(EX_MEM_mem_write), // input
+    .din (EX_MEM_dmem_data),   // input
 
-    .is_ready (), // output
-    .is_output_valid (), // output
-    .dout (), // output
-    .is_hit() // output
+    .is_ready (),        // output : 요청할 때 -> True면 pipelined 정상 시행
+    .is_output_valid (), // output : 받을 때 -> True면 pipelined 정상 시행
+    .dout (mem_dout),    // output :
+    .is_hit()            // output : 
   );
 
   // Update MEM/WB pipeline registers here
