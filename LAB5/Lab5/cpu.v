@@ -268,7 +268,7 @@ module cpu(input reset,                   // positive reset signal
 
   // Update ID/EX pipeline registers here
   always @(posedge clk) begin
-    if (reset || predict_reset || pcwrite == 0) begin
+    if (reset || predict_reset) begin //pc_write삭제, prediction업데이트 안한다는 가정하에
       ID_EX_alu_op     <= 0;    
       ID_EX_alu_src    <= 0;   
       ID_EX_mem_write  <= 0; 
@@ -392,7 +392,7 @@ module cpu(input reset,                   // positive reset signal
 
   assign is_input_valid = EX_MEM_mem_write | EX_MEM_mem_read;
   assign mem_access_stall = (ID_EX_mem_read | ID_EX_mem_write) && !is_ready;
-  assign active_mem_stage = is_input_valid ? !is_output_valid : 0;
+  assign active_mem_stage = is_input_valid ? !is_output_valid : 0; //mem stage를 다음 사이클에서 사용해도되는지 (넘어가도되는지)
   // ---------- Data Memory ----------
   Cache cache(
     .reset (reset),                     // input

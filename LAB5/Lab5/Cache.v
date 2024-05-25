@@ -15,7 +15,7 @@ module Cache #(parameter LINE_SIZE = 16, parameter NUM_SETS = 8, parameter NUM_W
 
   assign is_ready = (state == BASE);
   assign is_output_valid = is_hit;
-  assign dout = is_hit ? cacheArray[set_index][hit_index].data[block_offset*32 +: 32] : 0;
+  assign dout = is_hit ? data[set_index][hit_index][block_offset*32 +: 32] : 0;
   assign is_hit = (check_hit_index != NUM_WAYS);
 
 /* ------------------------------------ Cache Component ------------------------------------ */
@@ -26,21 +26,17 @@ module Cache #(parameter LINE_SIZE = 16, parameter NUM_SETS = 8, parameter NUM_W
   localparam    TAG_BITS = 32 - OFFSET_BITS - SET_BITS;
 
   // Wire declarations
-  wire    [TAG_BITS-1:0]          tag = addr[31 : 32 - TAG_BITS];
+  wire    [TAG_BITS-1:0]          input_tag = addr[31 : 32 - TAG_BITS];
   wire    [SET_BITS-1:0]    set_index = addr[SET_BITS + OFFSET_BITS - 1 : OFFSET_BITS];
-  wire [OFFSET_BITS-1:0] block_offset = addr[OFFSET_BITS - 1 : 0];
+  wire [OFFSET_BITS-3:0] block_offset = addr[OFFSET_BITS - 1 : 2];
 
   // Cache line structure
-  typedef struct packed {
-    reg [WAY_BITS:0]lru; // [1:0] : 2bit
-    reg dirty;
-    reg valid;
-    reg [TAG_BITS-1:0] tag;
-    reg [LINE_SIZE*8-1:0] data; 
-  } cache_line;
-
-  // Cache array
-  cache_line cacheArray[NUM_SETS][NUM_WAYS];
+  reg [WAY_BITS:0]lru [0:NUM_SETS-1][0:NUM_WAYS-1]; // [1:0] : 2bit
+  reg [0:0] dirty [0:NUM_SETS-1][0:NUM_WAYS-1];
+  reg [0:0] valid [0:NUM_SETS-1][0:NUM_WAYS-1];
+  reg [TAG_BITS-1:0] tag [0:NUM_SETS-1][0:NUM_WAYS-1];
+  reg [LINE_SIZE*8-1:0] data [0:NUM_SETS-1][0:NUM_WAYS-1];
+  
    
   // Initialize cache
   integer i, j;
@@ -48,9 +44,11 @@ module Cache #(parameter LINE_SIZE = 16, parameter NUM_SETS = 8, parameter NUM_W
     if (reset) begin
       for (i = 0; i < NUM_SETS; i++) begin
         for (j = 0; j < NUM_WAYS; j++) begin
-          cacheArray[i][j].valid <= 0;
-          cacheArray[i][j].dirty <= 0;
-          cacheArray[i][j].lru <= NUM_WAYS; // lru 초기값 : 2'b10
+          valid[i][j] <= 0;
+          dirty[i][j] <= 0;
+          data[i][j] <= 0;
+          tag[i][j] <= 0;
+          lru[i][j] <= NUM_WAYS; // lru 초기값 : 2'b10
         end
       end
     end
@@ -67,14 +65,14 @@ module Cache #(parameter LINE_SIZE = 16, parameter NUM_SETS = 8, parameter NUM_W
       case(state)
         BASE : begin // 입력이 들어왔을 때(MemRead or MemWrite)                    
           if (is_input_valid && !is_hit) begin // Miss인 경우 -> Memory 접근
-            if (cacheArray[set_index][change_index].dirty == 1)
+            if (dirty[set_index][change_index] == 1)
               state <= MEM_WRITE; // Evict way의 dirty bit = 1일 때
             else
               state <= MEM_READ;
           end
         end
         MEM_WRITE : begin
-          if(is_mem_output_valid)
+          if(is_mem_write_done)
             state <= MEM_READ;
         end
         MEM_READ : begin
@@ -97,17 +95,17 @@ module Cache #(parameter LINE_SIZE = 16, parameter NUM_SETS = 8, parameter NUM_W
 
         /* lru update logic */
         for (m = 0; m < NUM_WAYS; m++) begin
-          if (cacheArray[set_index][m].lru < cacheArray[set_index][hit_index].lru)
-            cacheArray[set_index][m].lru <= cacheArray[set_index][m].lru + 1;
+          if (lru[set_index][m] < lru[set_index][hit_index])
+            lru[set_index][m] <= lru[set_index][m] + 1;
         end
-        cacheArray[set_index][hit_index].lru <= 0;
+        lru[set_index][hit_index] <= 0;
 
 
         /* If "Store", cache data update logic */
         if(mem_rw) begin
         // "+:" : 상대적 비트 선택 연산자, block_offset*32에서 시작하여 32비트를 선택
-          cacheArray[set_index][hit_index].data[block_offset*32 +: 32] <= din;
-          cacheArray[set_index][hit_index].dirty <= 1;
+          data[set_index][hit_index][block_offset*32 +: 32] <= din;
+          dirty[set_index][hit_index] <= 1;
         end
 
       end
@@ -115,10 +113,10 @@ module Cache #(parameter LINE_SIZE = 16, parameter NUM_SETS = 8, parameter NUM_W
 
     else if(state == MEM_READ) begin
       if(is_mem_output_valid) begin
-        cacheArray[set_index][change_index].dirty <= 0;
-        cacheArray[set_index][change_index].valid <= 1;
-        cacheArray[set_index][change_index].tag   <= tag;
-        cacheArray[set_index][change_index].data  <= mem_dout;
+        dirty[set_index][change_index] <= 0;
+        valid[set_index][change_index] <= 1;
+        tag[set_index][change_index]   <= input_tag;
+        data[set_index][change_index]  <= mem_dout;
       end
     end
   end
@@ -138,7 +136,7 @@ module Cache #(parameter LINE_SIZE = 16, parameter NUM_SETS = 8, parameter NUM_W
   always @(*) begin 
     check_hit_index = NUM_WAYS; // Hit이 아닌 경우 : hit_index == NUM_WAYS    
     for(k = 0; k < NUM_WAYS; k = k + 1) begin  // 각 way의 valid, tag 비교 -> hit 여부 판단
-      if((cacheArray[set_index][k].valid == 1) && (cacheArray[set_index][k].tag == tag)) 
+      if((valid[set_index][k] == 1) && (tag[set_index][k] == input_tag)) 
         check_hit_index = k[WAY_BITS:0];         
     end
   end   
@@ -149,17 +147,20 @@ module Cache #(parameter LINE_SIZE = 16, parameter NUM_SETS = 8, parameter NUM_W
     all_valid = 1;
     // not valid한 way가 존재하는 경우 [Cold Miss]
     for(l = 0; l < NUM_WAYS; l = l + 1) begin
-      if(cacheArray[set_index][l].valid == 0) begin
+      if(valid[set_index][l] == 0) begin
         check_change_index = l[WAY_BITS:0];
-        all_valid = 0;         
+        all_valid = 0;
+        break;
       end
     end
 
     // 모든 way가 valid한 경우 -> Find Evict way by LRU policy [Conflict Miss]
     if(all_valid) begin
       for(l = 0; l < NUM_WAYS; l = l + 1) begin
-        if(cacheArray[set_index][l].lru == NUM_WAYS-1) 
+        if(lru[set_index][l] == NUM_WAYS-1) begin
           check_change_index = l[WAY_BITS:0];
+          break;
+        end
       end
     end
   end 
@@ -168,9 +169,12 @@ module Cache #(parameter LINE_SIZE = 16, parameter NUM_SETS = 8, parameter NUM_W
   wire [LINE_SIZE*8-1:0] mem_din, mem_dout;
   wire is_mem_input_valid, is_mem_output_valid, is_data_mem_ready;
   wire mem_read, mem_write;
+  wire is_mem_write_done;
+  wire [31:0] write_addr;
+  assign write_addr = {4'b0000, tag[set_index][change_index], set_index};
 
   assign is_mem_input_valid = (state != BASE) && is_data_mem_ready; 
-  assign mem_din   = cacheArray[set_index][change_index].data;
+  assign mem_din   = data[set_index][change_index];
   assign mem_write = (state == MEM_WRITE) && !is_mem_output_valid;
   assign mem_read  = (state == MEM_READ) && !is_mem_output_valid;
 
@@ -185,8 +189,11 @@ module Cache #(parameter LINE_SIZE = 16, parameter NUM_SETS = 8, parameter NUM_W
     .mem_write(mem_write),          // Memwrite 조건 : Evict && Dirty bit = 1
     .din(mem_din),
 
+    .write_addr(write_addr),
+
     // is output from the data memory valid?
     .is_output_valid(is_mem_output_valid),
+    .is_write_done(is_mem_write_done),
     .dout(mem_dout),
     // is data memory ready to accept request?
     .mem_ready(is_data_mem_ready)

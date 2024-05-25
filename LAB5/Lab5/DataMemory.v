@@ -10,9 +10,12 @@ module DataMemory #(parameter MEM_DEPTH = 16384,
     input mem_read,                         // is read signal driven?
     input mem_write,                        // is write signal driven?
     input [BLOCK_SIZE * 8 - 1:0] din,      // data to be written
+    
+    input [31:0] write_addr,
 
     // outputs from the data memory
     output is_output_valid,                 // is output valid?
+    output is_write_done,
     output [BLOCK_SIZE * 8 - 1:0] dout,    // output data
     output mem_ready);
 
@@ -26,6 +29,7 @@ module DataMemory #(parameter MEM_DEPTH = 16384,
 
   // Used to store the status of the previous memory request
   reg [31:0] _mem_addr;
+  reg [31:0] _mem_write_addr;
   reg _mem_read;
   reg _mem_write;
   reg [BLOCK_SIZE * 8 - 1:0] _din;
@@ -36,6 +40,7 @@ module DataMemory #(parameter MEM_DEPTH = 16384,
 
   assign dout = (_mem_read && (delay_counter == 0)) ? mem[_mem_addr] : 0;
   assign is_output_valid = (_mem_read && delay_counter == 0);
+  assign is_write_done = (_mem_write && delay_counter == 0);
 
   // Do not have to check `_mem_read == 0 & _mem_write == 0`
   assign mem_ready = delay_counter == 0;
@@ -50,7 +55,7 @@ module DataMemory #(parameter MEM_DEPTH = 16384,
     end
     // Write data to the memory
     else if (_mem_write && delay_counter == 0) begin
-      mem[_mem_addr] <= _din;
+      mem[_mem_write_addr] <= _din;
     end
   end
 
@@ -68,6 +73,7 @@ module DataMemory #(parameter MEM_DEPTH = 16384,
       _mem_read <= mem_read;
       _mem_write <= mem_write;
       _mem_addr <= addr;
+      _mem_write_addr <= write_addr;
       _din <= din;
     end
     else if (delay_counter > 0) begin
