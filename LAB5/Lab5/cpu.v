@@ -17,7 +17,7 @@ module cpu(input reset,                   // positive reset signal
   wire [31:0] curr_pc, next_pc, pc_add4, pc_addr, pc_btb, pc_src1, pc_src2, inst;
   wire [31:0] target_addr, predicted_target;
   wire [1:0] PCSrc3;
-  wire pcwrite, if_id_write, control_mux, valid, taken, hit, is_incorrect, prediction;
+  wire pcwrite, if_id_write, control_mux, valid, taken, hit, predict_reset, prediction;
   
   wire jal, jalr, branch, pc_to_reg, PCSrc1;
   wire mem_read, mem_to_reg, mem_write, alu_src, write_enable, is_ecall, bcond;
@@ -30,6 +30,8 @@ module cpu(input reset,                   // positive reset signal
   wire [1:0] foward_A, foward_B;
 
   wire [31:0] mem_dout, wb_dout;
+  wire is_input_valid, is_ready, is_output_valid, is_hit;
+  wire mem_access_stall, active_mem_stage;
 
   assign PCSrc1 = (ID_EX_branch & bcond) | ID_EX_jal;
   assign valid = ID_EX_branch | ID_EX_jal | ID_EX_jalr;
@@ -106,7 +108,7 @@ module cpu(input reset,                   // positive reset signal
   PC pc(
     .reset(reset),       // input (Use reset to initialize PC. Initial value must be 0)
     .clk(clk),           // input
-    .pcwrite(pcwrite),   // input
+    .pcwrite(pcwrite && (!mem_access_stall) && (!active_mem_stage)),   // input
     .next_pc(next_pc),   // input
     .curr_pc(curr_pc)    // output
   );
@@ -130,7 +132,7 @@ module cpu(input reset,                   // positive reset signal
     .cu_pc(pc_src2),               // input, 분기해야할 pc값
     .pre_pc(IF_ID_pc),             // input, predictor가 예측한 pc값
     .pc_mux_flag(PCSrc3),          // output
-    .is_incorrect(is_incorrect)    // output
+    .predict_reset(predict_reset)  // output
   );
 
   add_alu add4_PC(
@@ -192,13 +194,13 @@ module cpu(input reset,                   // positive reset signal
 
   // Update IF/ID pipeline registers here
   always @(posedge clk) begin
-    if (reset || is_incorrect) begin
+    if (reset || predict_reset) begin
       IF_ID_inst <= 0;   
       IF_ID_pc   <= 0;  
       IF_ID_pc4  <= 0;
       IF_ID_prediction <= 0;
     end else begin
-      if(if_id_write == 1) begin
+      if(if_id_write && !mem_access_stall && !active_mem_stage) begin
         IF_ID_inst <= inst;
         IF_ID_pc   <= curr_pc; 
         IF_ID_pc4  <= pc_add4;
@@ -266,7 +268,7 @@ module cpu(input reset,                   // positive reset signal
 
   // Update ID/EX pipeline registers here
   always @(posedge clk) begin
-    if (reset || is_incorrect || pcwrite == 0) begin
+    if (reset || predict_reset || pcwrite == 0) begin
       ID_EX_alu_op     <= 0;    
       ID_EX_alu_src    <= 0;   
       ID_EX_mem_write  <= 0; 
@@ -289,17 +291,19 @@ module cpu(input reset,                   // positive reset signal
       ID_EX_rd         <= 0;
       ID_EX_prediction <= 0;
     end else begin
-      {ID_EX_jal, ID_EX_jalr, ID_EX_branch, ID_EX_pc_ro_reg, ID_EX_mem_read, ID_EX_mem_to_reg, ID_EX_mem_write, ID_EX_alu_src, ID_EX_reg_write, ID_EX_alu_op, ID_EX_is_ecall} <= control_output;
-      ID_EX_pc         <= IF_ID_pc; // 추가
-      ID_EX_pc4        <= IF_ID_pc4; // 추가
-      ID_EX_rs1_data   <= rs1_dout;
-      ID_EX_rs2_data   <= rs2_dout;
-      ID_EX_imm        <= imm_gen_out;
-      ID_EX_ALU_ctrl_unit_input <= {IF_ID_inst[30], IF_ID_inst[14:12]};
-      ID_EX_rs1        <= IF_ID_inst[19:15];
-      ID_EX_rs2        <= IF_ID_inst[24:20];      
-      ID_EX_rd         <= IF_ID_inst[11: 7];
-      ID_EX_prediction <= IF_ID_prediction;
+      if (!mem_access_stall && !active_mem_stage) begin
+        {ID_EX_jal, ID_EX_jalr, ID_EX_branch, ID_EX_pc_ro_reg, ID_EX_mem_read, ID_EX_mem_to_reg, ID_EX_mem_write, ID_EX_alu_src, ID_EX_reg_write, ID_EX_alu_op, ID_EX_is_ecall} <= control_output;
+        ID_EX_pc         <= IF_ID_pc; // 추가
+        ID_EX_pc4        <= IF_ID_pc4; // 추가
+        ID_EX_rs1_data   <= rs1_dout;
+        ID_EX_rs2_data   <= rs2_dout;
+        ID_EX_imm        <= imm_gen_out;
+        ID_EX_ALU_ctrl_unit_input <= {IF_ID_inst[30], IF_ID_inst[14:12]};
+        ID_EX_rs1        <= IF_ID_inst[19:15];
+        ID_EX_rs2        <= IF_ID_inst[24:20];      
+        ID_EX_rd         <= IF_ID_inst[11: 7];
+        ID_EX_prediction <= IF_ID_prediction;
+      end
     end
   end
 
@@ -364,39 +368,44 @@ module cpu(input reset,                   // positive reset signal
       EX_MEM_mem_to_reg <= 0;
       EX_MEM_reg_write  <= 0; 
       EX_MEM_is_ecall   <= 0;
-      EX_MEM_pc_to_reg  <= 0; // 추가
-      EX_MEM_pc4        <= 0; // 추가
+      EX_MEM_pc_to_reg  <= 0; 
+      EX_MEM_pc4        <= 0; 
       EX_MEM_alu_out    <= 0;
       EX_MEM_dmem_data  <= 0;
       EX_MEM_rd         <= 0;
     end else begin
-      EX_MEM_mem_write  <= ID_EX_mem_write; 
-      EX_MEM_mem_read   <= ID_EX_mem_read;  
-      EX_MEM_is_branch  <= bcond; 
-      EX_MEM_mem_to_reg <= ID_EX_mem_to_reg;
-      EX_MEM_reg_write  <= ID_EX_reg_write;
-      EX_MEM_is_ecall   <= ID_EX_is_ecall;
-      EX_MEM_pc_to_reg  <= ID_EX_pc_ro_reg; // 추가
-      EX_MEM_pc4        <= ID_EX_pc4; // 추가 
-      EX_MEM_alu_out    <= alu_result;
-      EX_MEM_dmem_data  <= alu_src2_out;
-      EX_MEM_rd         <= ID_EX_rd;
+      if(!mem_access_stall && !active_mem_stage) begin
+        EX_MEM_mem_write  <= ID_EX_mem_write; 
+        EX_MEM_mem_read   <= ID_EX_mem_read;  
+        EX_MEM_is_branch  <= bcond; 
+        EX_MEM_mem_to_reg <= ID_EX_mem_to_reg;
+        EX_MEM_reg_write  <= ID_EX_reg_write;
+        EX_MEM_is_ecall   <= ID_EX_is_ecall;
+        EX_MEM_pc_to_reg  <= ID_EX_pc_ro_reg; 
+        EX_MEM_pc4        <= ID_EX_pc4;  
+        EX_MEM_alu_out    <= alu_result;
+        EX_MEM_dmem_data  <= alu_src2_out;
+        EX_MEM_rd         <= ID_EX_rd;
+      end
     end
   end
 
+  assign is_input_valid = EX_MEM_mem_write | EX_MEM_mem_read;
+  assign mem_access_stall = (ID_EX_mem_read | ID_EX_mem_write) && !is_ready;
+  assign active_mem_stage = is_input_valid ? !is_output_valid : 0;
   // ---------- Data Memory ----------
   Cache cache(
-    .reset (reset),            // input
-    .clk (clk),                // input
-    .is_input_valid(), // input
-    .addr (EX_MEM_alu_out),    // input
-    .mem_rw(EX_MEM_mem_write), // input
-    .din (EX_MEM_dmem_data),   // input
+    .reset (reset),                     // input
+    .clk (clk),                         // input
+    .is_input_valid(is_input_valid),    // input
+    .addr (EX_MEM_alu_out),             // input
+    .mem_rw(EX_MEM_mem_write),          // input
+    .din (EX_MEM_dmem_data),            // input
 
-    .is_ready (),        // output : 요청할 때 -> True면 pipelined 정상 시행
-    .is_output_valid (), // output : 받을 때 -> True면 pipelined 정상 시행
-    .dout (mem_dout),    // output :
-    .is_hit()            // output : 
+    .is_ready (is_ready),               // output : 요청할 때 -> True면 pipelined 정상 시행
+    .is_output_valid (is_output_valid), // output : 받을 때 -> True면 pipelined 정상 시행
+    .dout (mem_dout),                   // output :
+    .is_hit (is_hit)                    // output : 
   );
 
   // Update MEM/WB pipeline registers here
@@ -411,14 +420,16 @@ module cpu(input reset,                   // positive reset signal
       MEM_WB_mem_to_reg_src_1 <= 0;
       MEM_WB_rd <= 0;
     end else begin
-      MEM_WB_mem_to_reg <= EX_MEM_mem_to_reg;    
-      MEM_WB_reg_write  <= EX_MEM_reg_write; 
-      MEM_WB_pc_to_reg  <= EX_MEM_pc_to_reg; 
-      MEM_WB_pc4        <= EX_MEM_pc4; 
-      MEM_WB_is_ecall   <= EX_MEM_is_ecall;  
-      MEM_WB_mem_to_reg_src_0 <= EX_MEM_alu_out;
-      MEM_WB_mem_to_reg_src_1 <= mem_dout;
-      MEM_WB_rd <= EX_MEM_rd;
+      if(!active_mem_stage) begin
+        MEM_WB_mem_to_reg <= EX_MEM_mem_to_reg;    
+        MEM_WB_reg_write  <= EX_MEM_reg_write; 
+        MEM_WB_pc_to_reg  <= EX_MEM_pc_to_reg; 
+        MEM_WB_pc4        <= EX_MEM_pc4; 
+        MEM_WB_is_ecall   <= EX_MEM_is_ecall;  
+        MEM_WB_mem_to_reg_src_0 <= EX_MEM_alu_out;
+        MEM_WB_mem_to_reg_src_1 <= mem_dout;
+        MEM_WB_rd <= EX_MEM_rd;
+      end
     end
   end
 

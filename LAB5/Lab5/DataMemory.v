@@ -18,7 +18,7 @@ module DataMemory #(parameter MEM_DEPTH = 16384,
 
   integer i;
 
-  // Memory
+  // Memory(BLOCK_SIZE * 8 bits = BLOCK_SIZE bytes)
   reg [BLOCK_SIZE * 8 - 1:0] mem[0: MEM_DEPTH - 1];
 
   // delay counter used to delay the memory accesses
@@ -62,6 +62,7 @@ module DataMemory #(parameter MEM_DEPTH = 16384,
       _mem_addr <= 0;
       _din <= 0;
     end
+    // 새로운 요청이 들어온 경우
     else if (request_arrived && delay_counter == 0) begin
       delay_counter <= DELAY;
       _mem_read <= mem_read;
