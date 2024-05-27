@@ -1,6 +1,6 @@
 `include "CLOG2.v" // support `x` from 0 to 1024
 
-module Cache #(parameter LINE_SIZE = 16, parameter NUM_SETS = 8, parameter NUM_WAYS = 2) (
+module Cache #(parameter LINE_SIZE = 16, parameter NUM_SETS = 4, parameter NUM_WAYS = 4) (
     input reset,
     input clk,
     input is_input_valid,
@@ -11,12 +11,39 @@ module Cache #(parameter LINE_SIZE = 16, parameter NUM_SETS = 8, parameter NUM_W
     output is_ready,  
     output is_output_valid,
     output [31:0] dout,
-    output is_hit);
+    output is_hit,
+    
+    output reg [31:0] hit_ratio); // 히트율 출력을 위한 레지스터 정의
 
   assign is_ready = (state == BASE);
   assign is_output_valid = is_hit;
   assign dout = is_hit ? data[set_index][hit_index][block_offset*32 +: 32] : 0;
   assign is_hit = (check_hit_index != NUM_WAYS);
+
+/* ---------------------------------------- Counter ---------------------------------------- */
+  reg [31:0] total_accesses;  // 메모리 접근 횟수 카운터
+  reg [31:0] miss_count;      // 미스 발생 횟수 카운터
+
+  always @(posedge clk) begin
+      if (reset) begin
+          total_accesses <= 0;
+          miss_count <= 0;
+          hit_ratio  <= 0;
+      end else begin
+        if(state == BASE) begin
+          if (is_input_valid && is_hit)
+            total_accesses <= total_accesses + 1;
+        end else if (state == MEM_READ) begin
+          if(is_mem_output_valid) 
+            miss_count <= miss_count + 1;
+        end
+
+        // 히트율 계산
+        if (total_accesses > 0) begin // 0으로 나누는 것을 방지
+            hit_ratio <= (total_accesses - miss_count) * 100 / total_accesses;
+        end
+      end
+  end
 
 /* ------------------------------------ Cache Component ------------------------------------ */
   // Constants declarations
@@ -26,16 +53,16 @@ module Cache #(parameter LINE_SIZE = 16, parameter NUM_SETS = 8, parameter NUM_W
   localparam    TAG_BITS = 32 - OFFSET_BITS - SET_BITS;
 
   // Wire declarations
-  wire    [TAG_BITS-1:0]          input_tag = addr[31 : 32 - TAG_BITS];
+  wire    [TAG_BITS-1:0]    input_tag = addr[31 : 32 - TAG_BITS];
   wire    [SET_BITS-1:0]    set_index = addr[SET_BITS + OFFSET_BITS - 1 : OFFSET_BITS];
   wire [OFFSET_BITS-3:0] block_offset = addr[OFFSET_BITS - 1 : 2];
 
   // Cache line structure
-  reg [WAY_BITS:0]lru [0:NUM_SETS-1][0:NUM_WAYS-1]; // [1:0] : 2bit
-  reg [0:0] dirty [0:NUM_SETS-1][0:NUM_WAYS-1];
-  reg [0:0] valid [0:NUM_SETS-1][0:NUM_WAYS-1];
-  reg [TAG_BITS-1:0] tag [0:NUM_SETS-1][0:NUM_WAYS-1];
-  reg [LINE_SIZE*8-1:0] data [0:NUM_SETS-1][0:NUM_WAYS-1];
+  reg      [WAY_BITS:0]   lru [0:NUM_SETS-1][0:NUM_WAYS-1]; // [1:0] : 2bit
+  reg             [0:0] dirty [0:NUM_SETS-1][0:NUM_WAYS-1];
+  reg             [0:0] valid [0:NUM_SETS-1][0:NUM_WAYS-1];
+  reg    [TAG_BITS-1:0]   tag [0:NUM_SETS-1][0:NUM_WAYS-1];
+  reg [LINE_SIZE*8-1:0]  data [0:NUM_SETS-1][0:NUM_WAYS-1];
   
    
   // Initialize cache
@@ -171,7 +198,7 @@ module Cache #(parameter LINE_SIZE = 16, parameter NUM_SETS = 8, parameter NUM_W
   wire mem_read, mem_write;
   wire is_mem_write_done;
   wire [31:0] write_addr;
-  assign write_addr = {4'b0000, tag[set_index][change_index], set_index};
+  assign write_addr = mem_write ? {tag[set_index][change_index], set_index, 4'b0000} : addr; 
 
   assign is_mem_input_valid = (state != BASE) && is_data_mem_ready; 
   assign mem_din   = data[set_index][change_index];
@@ -184,18 +211,14 @@ module Cache #(parameter LINE_SIZE = 16, parameter NUM_SETS = 8, parameter NUM_W
     .clk(clk),
 
     .is_input_valid(is_mem_input_valid),
-    .addr(addr >> `CLOG2(LINE_SIZE)), // NOTE: address must be shifted by CLOG2(LINE_SIZE)
-    .mem_read(mem_read),            // MemRead  조건 : Miss 발생 시 항상
-    .mem_write(mem_write),          // Memwrite 조건 : Evict && Dirty bit = 1
+    .addr(write_addr >> `CLOG2(LINE_SIZE)), // NOTE: address must be shifted by CLOG2(LINE_SIZE)
+    .mem_read(mem_read),                    // MemRead  조건 : Miss 발생 시 항상
+    .mem_write(mem_write),                  // Memwrite 조건 : Evict && Dirty bit = 1
     .din(mem_din),
 
-    .write_addr(write_addr),
-
-    // is output from the data memory valid?
-    .is_output_valid(is_mem_output_valid),
-    .is_write_done(is_mem_write_done),
-    .dout(mem_dout),
-    // is data memory ready to accept request?
-    .mem_ready(is_data_mem_ready)
+    .is_output_valid(is_mem_output_valid),  // is output from the data memory valid? (Load)
+    .is_write_done(is_mem_write_done),      // is output from the data memory valid? (Store)
+    .dout(mem_dout),    
+    .mem_ready(is_data_mem_ready)           // is data memory ready to accept request?
   );
 endmodule

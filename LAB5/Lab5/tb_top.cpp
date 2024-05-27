@@ -12,8 +12,7 @@
 using namespace std;
 #include "Vtop.h"
 
-// #define MAX_SIM_TIME 1000000000
-#define MAX_SIM_TIME 10000000
+#define MAX_SIM_TIME 1000000000
 int sim_time = 0;
 int total_cycle = 0;
 
@@ -85,7 +84,7 @@ int main(int argc, char **argv, char **env)
     cout << "FINAL REGISTER OUTPUT" << endl;
 
     // Print your Hit ratio
-    //
+    cout << "Hit ratio: " << dut->hit_ratio << "%" <<  endl;
 
     for (int i = 0; i < 32; i = i + 1)
     {

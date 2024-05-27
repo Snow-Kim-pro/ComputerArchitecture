@@ -11,7 +11,9 @@
 module cpu(input reset,                   // positive reset signal
            input clk,                     // clock signal
            output is_halted,              // Whehther to finish simulation
-           output [31:0]print_reg[0:31]); // Whehther to finish simulation
+           output [31:0] hit_ratio,
+           output [31:0] print_reg[0:31]); // Whehther to finish simulation
+           
            
   /***** Wire declarations *****/
   wire [31:0] curr_pc, next_pc, pc_add4, pc_addr, pc_btb, pc_src1, pc_src2, inst;
@@ -404,8 +406,9 @@ module cpu(input reset,                   // positive reset signal
 
     .is_ready (is_ready),               // output : 요청할 때 -> True면 pipelined 정상 시행
     .is_output_valid (is_output_valid), // output : 받을 때 -> True면 pipelined 정상 시행
-    .dout (mem_dout),                   // output :
-    .is_hit (is_hit)                    // output : 
+    .dout (mem_dout),                   // output 
+    .is_hit (is_hit),                   // output  
+    .hit_ratio(hit_ratio)               // output 
   );
 
   // Update MEM/WB pipeline registers here
