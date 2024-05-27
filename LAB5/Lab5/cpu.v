@@ -1,5 +1,5 @@
 // Submit this file with other files you created.
-// Do not touch port declarations of the module 'CPU'.
+// Lab5_62668_20200045_20200703
 
 // Guidelines
 // 1. It is highly recommened to `define opcodes and something useful.
