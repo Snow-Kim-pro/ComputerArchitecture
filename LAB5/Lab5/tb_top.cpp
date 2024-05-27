@@ -31,8 +31,8 @@ void next_cycle(Vtop *dut, VerilatedVcdC *m_trace)
 int main(int argc, char **argv, char **env)
 {
     // TO DO : CHANGE "filename" TO PROVIDED "answer_*.txt" PATH
-    string filename = "./student_tb/naive_ripes_result.txt";
-    // string filename = "./student_tb/opt_ripes_result.txt";
+    // string filename = "./student_tb/naive_ripes_result.txt";
+    string filename = "./student_tb/opt_ripes_result.txt";
     ifstream file(filename);
     stringstream ss;
     string reg_hex;

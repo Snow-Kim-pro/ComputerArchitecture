@@ -22,8 +22,8 @@ module InstMemory #(parameter MEM_DEPTH = 16384) (input reset,
         /* verilator lint_on BLKSEQ */
         // DO NOT TOUCH COMMENT ABOVE
       // Provide path of the file including instructions with binary format
-      $readmemh("./student_tb/naive_matmul_unroll.mem", mem);
-      // $readmemh("./student_tb/opt_matmul_unroll.mem", mem);
+      // $readmemh("./student_tb/naive_matmul_unroll.mem", mem);
+      $readmemh("./student_tb/opt_matmul_unroll.mem", mem);
     end
   end
 

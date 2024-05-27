@@ -1,11 +1,11 @@
 
 <main>:
-0	addi	sp,sp,-800
-4	sw	s0,796(sp)
-8	addi	s0,sp,800
-12	sw	zero,-20(s0)
-16	lw	a5,-20(s0)
-20	addi	a4,a5,1
+	addi	sp,sp,-800
+	sw	s0,796(sp)
+	addi	s0,sp,800
+	sw	zero,-20(s0)
+	lw	a5,-20(s0)
+	addi	a4,a5,1
 	sw	a4,-20(s0)
 	sw	a5,-276(s0)
 	lw	a5,-20(s0)

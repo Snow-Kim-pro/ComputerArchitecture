@@ -100,7 +100,7 @@ module Cache #(parameter LINE_SIZE = 16, parameter NUM_SETS = 4, parameter NUM_W
           end
         end
         MEM_WRITE : begin
-          if(is_mem_write_done)
+          if(is_data_mem_ready)
             state <= MEM_READ;
         end
         MEM_READ : begin
@@ -197,10 +197,9 @@ module Cache #(parameter LINE_SIZE = 16, parameter NUM_SETS = 4, parameter NUM_W
   wire [LINE_SIZE*8-1:0] mem_din, mem_dout;
   wire is_mem_input_valid, is_mem_output_valid, is_data_mem_ready;
   wire mem_read, mem_write;
-  wire is_mem_write_done;
   wire [31:0] write_addr;
-  assign write_addr = mem_write ? {tag[set_index][change_index], set_index, 4'b0000} : addr; 
 
+  assign write_addr = mem_write ? {tag[set_index][change_index], set_index, 4'b0000} : addr; 
   assign is_mem_input_valid = (state != BASE) && is_data_mem_ready; 
   assign mem_din   = data[set_index][change_index];
   assign mem_write = (state == MEM_WRITE) && !is_mem_output_valid;
@@ -212,13 +211,12 @@ module Cache #(parameter LINE_SIZE = 16, parameter NUM_SETS = 4, parameter NUM_W
     .clk(clk),
 
     .is_input_valid(is_mem_input_valid),
-    .addr(write_addr >> `CLOG2(LINE_SIZE)), // NOTE: address must be shifted by CLOG2(LINE_SIZE)
+    .addr(write_addr >> OFFSET_BITS),       // NOTE: address must be shifted by CLOG2(LINE_SIZE)
     .mem_read(mem_read),                    // MemRead  조건 : Miss 발생 시 항상
     .mem_write(mem_write),                  // Memwrite 조건 : Evict && Dirty bit = 1
     .din(mem_din),
 
-    .is_output_valid(is_mem_output_valid),  // is output from the data memory valid? (Load)
-    .is_write_done(is_mem_write_done),      // is output from the data memory valid? (Store)
+    .is_output_valid(is_mem_output_valid),  // is output from the data memory valid?
     .dout(mem_dout),    
     .mem_ready(is_data_mem_ready)           // is data memory ready to accept request?
   );
